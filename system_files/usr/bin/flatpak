@@ -66,4 +66,20 @@ if [ -z "$FLATPAK_USER_ALLOWED" ]; then
     set -- "${new_args[@]}"
 fi
 
-exec /usr/libexec/flatpak "$@"
+#!/bin/bash
+
+has_system=0
+
+for arg in "$@"; do
+    if [ "$arg" = "--system" ]; then
+        has_system=1
+        break
+    fi
+done
+
+if [ "$has_system" -eq 1 ]; then
+    exec /usr/bin/pkexec /usr/libexec/flatpak "$@"
+else
+    exec /usr/libexec/flatpak "$@"
+fi
+
