@@ -60,7 +60,9 @@ dnf5 -y install --setopt=install_weak_deps=False \
     wlr-randr \
     distrobox \
     wl-clipboard \
-    binutils
+    binutils \
+    btop \
+    tailscale
 
 curl --connect-timeout 30 --max-time 120 --retry 3 -fsSL \
     -o /etc/yum.repos.d/negativo17-fedora-multimedia.repo \

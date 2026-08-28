@@ -26,6 +26,8 @@ dnf5 -y install --setopt=install_weak_deps=False /packages/networkmanager/*.rpm
 
 dnf5 -y install --setopt=install_weak_deps=False /packages/armada-splash/*.rpm
 
+dnf5 -y install --setopt=install_weak_deps=False /packages/armada-rgb/*.rpm
+
 dnf5 -y install --setopt=install_weak_deps=False /packages/jupiter-hw-support/*.rpm
 
 # Avoid gamescope-session-ogui-steam/-powerstation; Terra's aarch64 deps are broken.
@@ -127,10 +129,9 @@ python3 /ctx/build_files/patch-proton-cachyos-dxvk-probe.py \
 python3 /ctx/build_files/set-steam-default-compat.py "${STEAM_HOME}" "${PROTON_TOOL_NAME}" "${PROTON_DIR}"
 rm -f "/tmp/${PROTON_TAR}" "/tmp/${PROTON_ARCHIVE_NAME}.sha512sum"
 
-# Pin Steam, Proton, and the FEX rootfs to their own rechunk layers (build-chunked-oci reads the
-# user.component xattr) so a system_files change doesn't re-pull them every OTA.
+# Identify large independently updated components for content-aware layer packing.
 python3 -c 'import os,sys; os.setxattr(sys.argv[1],"user.component",b"steam")' "${STEAM_HOME}"
 python3 -c 'import os,sys; os.setxattr(sys.argv[1],"user.component",b"proton")' "${PROTON_DIR}/${PROTON_TOOL_NAME}"
-python3 -c 'import os,sys; os.setxattr(sys.argv[1],"user.component",b"fex-rootfs")' /usr/share/fex-emu/RootFS
+python3 -c 'import os,sys; os.setxattr(sys.argv[1],"user.component",b"fex-rootfs")' /usr/share/fex-emu/RootFS/ArchLinux.sqsh
 
 echo "Pre-staged: ARM64 Steam bootstrap + CachyOS Proton 11 ${PROTON_VER}"

@@ -66,6 +66,13 @@ export interface CalibrationState {
   params?: Record<string, number>;
 }
 
+export interface RgbConfig {
+  version: number;
+  enabled: boolean;
+  brightness: number;
+  color: string;
+}
+
 export interface GameRef {
   appid: string;
   name: string;
@@ -87,6 +94,7 @@ export interface Config {
   fexProfiles: Record<string, FexProfile>;
   perf?: PerfInfo;
   cpuDeviceClass: string;
+  rgbSupported: boolean;
   osVersion: string;
   ablVersion: string;
   ablAutoEnabled: boolean;
