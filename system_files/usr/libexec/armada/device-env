@@ -1,6 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
+before=$(declare)
+source /usr/share/gamescope-session-plus/device-quirks
+after=$(declare)
+
+comm -13 "$before" "$after" | while IFS= read -r line; do
+    printf '%s%s\n' "GAMESCOPE_${line}"
+done
+
 device_dir=${ARMADA_DEVICE_DIR:-/usr/lib/armada/devices}
 
 source "$device_dir/defaults.conf"
