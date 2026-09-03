@@ -1,14 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-before=$(declare)
-source /usr/share/gamescope-session-plus/device-quirks
-after=$(declare)
-
-comm -13 "$before" "$after" | while IFS= read -r line; do
-    printf '%s%s\n' "GAMESCOPE_${line}"
-done
-
 device_dir=${ARMADA_DEVICE_DIR:-/usr/lib/armada/devices}
 
 source "$device_dir/defaults.conf"
@@ -40,6 +32,20 @@ case "$model" in
     "Retroid Pocket Nova") profile=retroid-pocket-nova ;;
     *) profile= ;;
 esac
+
+source /usr/share/gamescope-session-plus/device-quirks 2>/dev/null
+
+ARMADA_PANEL_ORIENTATION=${ORIENTATION:-normal}
+ARMADA_PANEL_REFRESH_RATES=${CUSTOM_REFRESH_RATES}
+
+IFS=',' read -r -a connectors <<< "$OUTPUT_CONNECTOR"
+
+ARMADA_PRIMARY_CONNECTOR="${connectors[1]}"
+
+if [ "${#connectors[@]}" -ge 3 ]; then
+    ARMADA_SECONDARY_CONNECTOR="${connectors[2]}"
+fi
+
 
 if [[ -n "$profile" && -r "$device_dir/$profile.conf" ]]; then
     source "$device_dir/$profile.conf"
@@ -116,11 +122,10 @@ vars=(
     ARMADA_PRIMARY_CONNECTOR
     ARMADA_PRIMARY_BACKLIGHT
     ARMADA_SECONDARY_CONNECTOR
-    ARMADA_VIRTUAL_KEYBOARD_CONNECTOR
-    ARMADA_PRIMARY_TOUCHSCREEN
     ARMADA_SECONDARY_TOUCHSCREEN
     ARMADA_PANEL_TYPE
     ARMADA_PANEL_ORIENTATION
+    ARMADA_PANEL_REFRESH_RATES
     ARMADA_HDR_NITS
     ARMADA_GAMEPAD_QUIRK
     ARMADA_RGB_BACKEND
