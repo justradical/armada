@@ -29,6 +29,7 @@ required=(
     usr/libexec/armada/armada-splash-launcher \
     usr/libexec/armada/device-env \
     usr/share/armada/splash/splash.asp \
+    usr/share/gamescope-session-plus/device-quirks \
     usr/libexec/armada/armada-ostree-fallback \
     usr/lib/systemd/system/ostree-prepare-root.service.d/armada-fallback.conf \
     usr/lib/ostree/ostree-prepare-root
