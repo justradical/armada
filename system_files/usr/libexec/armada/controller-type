@@ -11,17 +11,9 @@ IFACE = "org.shadowblip.Input.CompositeDevice"
 DEFAULT_TYPE = "deck-uhid"
 CONTROLLER_TYPES = {
     "deck-uhid": "Steam Deck",
+    "xbox-series": "Xbox Series",
     "xb360": "Xbox 360",
     "ds5": "DualSense",
-}
-ARMADA_PROFILE_NAMES = {
-    "AYANEO Japanese Layout",
-    "AYANEO Layout",
-    "AYANEO Standard Layout",
-    "AYN Layout",
-    "AYN Thor Layout",
-    "KONKR Pocket FIT Elite",
-    "Retroid Layout",
 }
 
 
@@ -89,8 +81,6 @@ def apply_type(value):
         return False
     ok = False
     for path in paths:
-        if composite_name(path) not in ARMADA_PROFILE_NAMES:
-            continue
         try:
             subprocess.run(
                 ["busctl", "--system", "call", SERVICE, path, IFACE, "SetTargetDevices", "as", "2", value, "keyboard"],
@@ -120,7 +110,7 @@ def main(argv):
         return 0
     if command == "set":
         if len(argv) != 3:
-            print("usage: controller-type set <deck-uhid|xb360|ds5>", file=sys.stderr)
+            print("usage: controller-type set <deck-uhid|xbox-series|xb360|ds5>", file=sys.stderr)
             return 2
         if argv[2] not in CONTROLLER_TYPES:
             print(f"invalid controller type: {argv[2]}", file=sys.stderr)

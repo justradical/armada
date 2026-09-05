@@ -6,6 +6,7 @@ CONTROLLER_TYPE = "/usr/libexec/armada/controller-type"
 DEFAULT_TYPE = "deck-uhid"
 CONTROLLER_TYPES = {
     "deck-uhid": "Steam Deck",
+    "xbox-series": "Xbox Series",
     "xb360": "Xbox 360",
     "ds5": "DualSense",
 }
