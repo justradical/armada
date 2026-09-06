@@ -104,8 +104,8 @@ export interface Config {
   osVersion: string;
   ablVersion: string;
   ablAutoEnabled: boolean;
-  lowBrightnessGateEnabled: boolean;
-  lowBrightnessGatePercent: number;
+  softwareDimEnabled: boolean;
+  softwareDimPercent: number;
   bottomScreenSupported: boolean;
   bottomScreenEnabled: boolean;
   bottomScreenBrightnessSupported: boolean;

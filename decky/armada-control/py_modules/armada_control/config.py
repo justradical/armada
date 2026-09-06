@@ -7,14 +7,14 @@ from .system import (
     bottom_screen_brightness,
     bottom_screen_enabled,
     device_env,
-    low_brightness_gate_enabled,
-    low_brightness_gate_percent,
     mtp_enabled,
     os_version,
     perf_info,
     desktop_mode,
     desktop_modes,
     sleep_modes,
+    software_dim_enabled,
+    software_dim_percent,
     ssh_enabled,
 )
 from .tweaks import fex_profile_labels, load_fex_contract, load_tweaks
@@ -41,8 +41,8 @@ def build_config(include_games=True):
         "osVersion": os_version(),
         "ablVersion": abl_version(),
         "ablAutoEnabled": abl_auto_enabled(),
-        "lowBrightnessGateEnabled": low_brightness_gate_enabled(),
-        "lowBrightnessGatePercent": low_brightness_gate_percent(),
+        "softwareDimEnabled": software_dim_enabled(),
+        "softwareDimPercent": software_dim_percent(),
         "bottomScreenSupported": bool(
             env.get("ARMADA_SECONDARY_CONNECTOR") and env.get("ARMADA_SECONDARY_TOUCHSCREEN")
         ),

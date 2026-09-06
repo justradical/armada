@@ -7,8 +7,8 @@ import {
   setBottomScreenBrightness as applyBottomScreenBrightness,
   setBottomScreenEnabled as applyBottomScreenEnabled,
   setControllerType as applyControllerType,
-  setLowBrightnessGateEnabled as applyLowBrightnessGateEnabled,
-  setLowBrightnessGatePercent as applyLowBrightnessGatePercent,
+  setSoftwareDimEnabled as applySoftwareDimEnabled,
+  setSoftwareDimPercent as applySoftwareDimPercent,
   setMtpEnabled as applyMtpEnabled,
   setDesktopMode as applyDesktopMode,
   setSleepMode as applySleepMode,
@@ -19,7 +19,7 @@ import { SelectEdit, SliderEdit, ToggleRow } from "../components/widgets";
 import type { Config } from "../types";
 
 const BOTTOM_SCREEN_BRIGHTNESS_DELAY_MS: number = 150;
-const LOW_BRIGHTNESS_GATE_PERCENT_DELAY_MS: number = 150;
+const SOFTWARE_DIM_PERCENT_DELAY_MS: number = 150;
 
 export function Settings({ config, setConfig }: {
   config: Config;
@@ -28,15 +28,15 @@ export function Settings({ config, setConfig }: {
   const bottomScreenBrightnessTimer = useRef<number | undefined>(undefined);
   const bottomScreenBrightnessRequest = useRef<number>(0);
   const appliedBottomScreenBrightness = useRef<number>(config.bottomScreenBrightness);
-  const lowBrightnessGatePercentTimer = useRef<number | undefined>(undefined);
-  const lowBrightnessGatePercentRequest = useRef<number>(0);
-  const appliedLowBrightnessGatePercent = useRef<number>(config.lowBrightnessGatePercent);
+  const softwareDimPercentTimer = useRef<number | undefined>(undefined);
+  const softwareDimPercentRequest = useRef<number>(0);
+  const appliedSoftwareDimPercent = useRef<number>(config.softwareDimPercent);
 
   useEffect(() => () => {
     window.clearTimeout(bottomScreenBrightnessTimer.current);
     bottomScreenBrightnessRequest.current += 1;
-    window.clearTimeout(lowBrightnessGatePercentTimer.current);
-    lowBrightnessGatePercentRequest.current += 1;
+    window.clearTimeout(softwareDimPercentTimer.current);
+    softwareDimPercentRequest.current += 1;
   }, []);
 
   const setSshEnabled = async (enabled: boolean) => {
@@ -85,38 +85,38 @@ export function Settings({ config, setConfig }: {
       setConfig((current) => (current ? { ...current, ablAutoEnabled: !enabled } : current));
     }
   };
-  const setLowBrightnessGateEnabled = async (enabled: boolean) => {
-    if (enabled === !!config.lowBrightnessGateEnabled) {
+  const setSoftwareDimEnabled = async (enabled: boolean) => {
+    if (enabled === !!config.softwareDimEnabled) {
       return;
     }
-    setConfig((current) => (current ? { ...current, lowBrightnessGateEnabled: enabled } : current));
+    setConfig((current) => (current ? { ...current, softwareDimEnabled: enabled } : current));
     try {
-      const applied = await applyLowBrightnessGateEnabled(enabled);
-      setConfig((current) => (current ? { ...current, lowBrightnessGateEnabled: applied } : current));
+      const applied = await applySoftwareDimEnabled(enabled);
+      setConfig((current) => (current ? { ...current, softwareDimEnabled: applied } : current));
     } catch (error) {
-      setConfig((current) => (current ? { ...current, lowBrightnessGateEnabled: !enabled } : current));
-      toaster.toast({ title: "Could not change low-brightness gate", body: String(error) });
+      setConfig((current) => (current ? { ...current, softwareDimEnabled: !enabled } : current));
+      toaster.toast({ title: "Could not change software dimming", body: String(error) });
     }
   };
-  const setLowBrightnessGatePercent = (percent: number) => {
-    setConfig((current) => (current ? { ...current, lowBrightnessGatePercent: percent } : current));
-    window.clearTimeout(lowBrightnessGatePercentTimer.current);
-    const request = ++lowBrightnessGatePercentRequest.current;
-    lowBrightnessGatePercentTimer.current = window.setTimeout(async () => {
+  const setSoftwareDimPercent = (percent: number) => {
+    setConfig((current) => (current ? { ...current, softwareDimPercent: percent } : current));
+    window.clearTimeout(softwareDimPercentTimer.current);
+    const request = ++softwareDimPercentRequest.current;
+    softwareDimPercentTimer.current = window.setTimeout(async () => {
       try {
-        const applied = await applyLowBrightnessGatePercent(percent);
-        if (request !== lowBrightnessGatePercentRequest.current) return;
-        appliedLowBrightnessGatePercent.current = applied;
-        setConfig((current) => (current ? { ...current, lowBrightnessGatePercent: applied } : current));
+        const applied = await applySoftwareDimPercent(percent);
+        if (request !== softwareDimPercentRequest.current) return;
+        appliedSoftwareDimPercent.current = applied;
+        setConfig((current) => (current ? { ...current, softwareDimPercent: applied } : current));
       } catch (error) {
-        if (request !== lowBrightnessGatePercentRequest.current) return;
+        if (request !== softwareDimPercentRequest.current) return;
         setConfig((current) => (current ? {
           ...current,
-          lowBrightnessGatePercent: appliedLowBrightnessGatePercent.current,
+          softwareDimPercent: appliedSoftwareDimPercent.current,
         } : current));
-        toaster.toast({ title: "Could not change minimum brightness", body: String(error) });
+        toaster.toast({ title: "Could not change software dimming range", body: String(error) });
       }
-    }, LOW_BRIGHTNESS_GATE_PERCENT_DELAY_MS);
+    }, SOFTWARE_DIM_PERCENT_DELAY_MS);
   };
   const setBottomScreenEnabled = async (enabled: boolean) => {
     if (enabled === !!config.bottomScreenEnabled) {
@@ -197,19 +197,19 @@ export function Settings({ config, setConfig }: {
       </PanelSection>
       <PanelSection title="Experimental">
         <ToggleRow
-          label="Disable Low Brightness"
-          description="On some panels, very low brightness causes a visible green tint. This stops the screen from going below the minimum set here."
-          value={!!config.lowBrightnessGateEnabled}
-          onChange={setLowBrightnessGateEnabled}
+          label="Software Dimming"
+          description="On some panels, very low hardware brightness causes a visible green tint. This keeps hardware brightness above a safe minimum and uses software dimming to cover the range below it."
+          value={!!config.softwareDimEnabled}
+          onChange={setSoftwareDimEnabled}
         />
-        {!!config.lowBrightnessGateEnabled && (
+        {!!config.softwareDimEnabled && (
           <SliderEdit
-            label="Minimum Brightness"
-            value={config.lowBrightnessGatePercent}
+            label="Software Dimming Range"
+            value={config.softwareDimPercent}
             min={0}
             max={50}
             step={1}
-            onChange={setLowBrightnessGatePercent}
+            onChange={setSoftwareDimPercent}
           />
         )}
         {config.bottomScreenSupported && (
