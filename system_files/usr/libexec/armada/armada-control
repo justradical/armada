@@ -22,6 +22,8 @@ SESSION_SOCKET = Path(armada_perf.SESSION_SOCKET)
 ABL_VERSION_TOOL = "/usr/lib/armada/abl-version"
 RGB_TOOL = "/usr/bin/armada-rgb"
 ABL_CONFIG = Path("/etc/armada/abl.conf")
+DISPLAY_CONFIG = Path("/etc/armada/display.conf")
+LOW_BRIGHTNESS_GATE_DEFAULT_PERCENT = 8
 ABL_MANIFEST = Path("/usr/lib/armada/abl/manifest")
 ABL_PARTITIONS = (
     ("A", "/dev/disk/by-partlabel/abl_a"),
@@ -305,6 +307,36 @@ def restore_bottom_screen_brightness(path=None):
         pass
 
 
+def _read_display_config():
+    try:
+        lines = DISPLAY_CONFIG.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return {}
+    values = {}
+    for line in lines:
+        name, sep, raw = line.partition("=")
+        if sep:
+            values[name.strip()] = raw.strip()
+    return values
+
+
+def _write_display_config(**values):
+    atomic_write(DISPLAY_CONFIG, "".join(f"{key}={value}\n" for key, value in values.items()))
+
+
+def low_brightness_gate_enabled():
+    return _read_display_config().get("low_brightness_gate_enabled") == "1"
+
+
+def low_brightness_gate_percent():
+    raw = _read_display_config().get("low_brightness_gate_percent", "")
+    try:
+        percent = int(raw)
+    except ValueError:
+        return LOW_BRIGHTNESS_GATE_DEFAULT_PERCENT
+    return percent if 0 <= percent <= 100 else LOW_BRIGHTNESS_GATE_DEFAULT_PERCENT
+
+
 def abl_version():
     versions = []
     for name, partition in ABL_PARTITIONS:
@@ -450,6 +482,33 @@ def action_set_bottom_screen_enabled(request):
         session_systemctl("disable", "--now", BOTTOM_SCREEN_SERVICE)
 
     return {"enabled": bottom_screen_enabled()}
+
+
+def action_get_low_brightness_gate_enabled(request):
+    return {"enabled": low_brightness_gate_enabled()}
+
+
+def action_set_low_brightness_gate_enabled(request):
+    _write_display_config(
+        low_brightness_gate_enabled=int(bool(request.get("enabled"))),
+        low_brightness_gate_percent=low_brightness_gate_percent(),
+    )
+    return {"enabled": low_brightness_gate_enabled()}
+
+
+def action_get_low_brightness_gate_percent(request):
+    return {"percent": low_brightness_gate_percent()}
+
+
+def action_set_low_brightness_gate_percent(request):
+    percent = request.get("percent")
+    if not isinstance(percent, int) or isinstance(percent, bool) or not 0 <= percent <= 100:
+        raise ValueError("invalid low-brightness gate percent")
+    _write_display_config(
+        low_brightness_gate_enabled=int(low_brightness_gate_enabled()),
+        low_brightness_gate_percent=percent,
+    )
+    return {"percent": low_brightness_gate_percent()}
 
 
 def action_get_abl_version(request):
@@ -707,6 +766,10 @@ ACTIONS = {
     "get_bottom_screen_enabled": action_get_bottom_screen_enabled,
     "get_bottom_screen_brightness": action_get_bottom_screen_brightness,
     "get_abl_version": action_get_abl_version,
+    "get_low_brightness_gate_enabled": action_get_low_brightness_gate_enabled,
+    "set_low_brightness_gate_enabled": action_set_low_brightness_gate_enabled,
+    "get_low_brightness_gate_percent": action_get_low_brightness_gate_percent,
+    "set_low_brightness_gate_percent": action_set_low_brightness_gate_percent,
     "get_rgb": action_get_rgb,
     "set_rgb": action_set_rgb,
     "get_abl_auto_enabled": action_get_abl_auto_enabled,

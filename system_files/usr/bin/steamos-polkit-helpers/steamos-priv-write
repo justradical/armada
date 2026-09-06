@@ -4,6 +4,19 @@ set -euo pipefail
 WRITE_PATH="${1:-}"
 WRITE_VALUE="${2:-}"
 
+# Some panels show a visible tint or other artifact at very low PWM-driven
+# brightness. low_brightness_gate_enabled lets a user avoid that by not
+# letting requested brightness go below low_brightness_gate_percent of
+# max_brightness; this does not change the dimming method itself (still
+# PWM), it only avoids the low end of the range. Off by default, and the
+# percent is device-specific - see low_brightness_gate_percent below.
+# Requested brightness is rescaled onto [gate floor, max] rather than
+# clamped, so the full requested range stays usable with no dead zone at
+# the bottom. LOW_BRIGHTNESS_GATE_DEFAULT_PERCENT is only the fallback
+# used if the config enables the gate without setting a percent.
+LOW_BRIGHTNESS_GATE_DEFAULT_PERCENT=8
+DISPLAY_CONFIG=/etc/armada/display.conf
+
 if [[ -z "$WRITE_PATH" ]]; then
     echo "Usage: $0 <path> [value]" >&2
     exit 2
@@ -92,6 +105,19 @@ if [[ "$WRITE_PATH" =~ ^/sys/class/backlight/([[:alnum:]_:-][[:alnum:]_.:-]*)/br
         tgt_max="$(cat "$tgt_dir/max_brightness")"
         if [[ "$src_max" -gt 0 && "$src_max" -ne "$tgt_max" ]]; then
             val=$(( val * tgt_max / src_max ))
+        fi
+    fi
+    if [[ -r "$DISPLAY_CONFIG" ]] && grep -q '^low_brightness_gate_enabled=1$' "$DISPLAY_CONFIG" 2>/dev/null \
+        && [[ -e "$tgt_dir/max_brightness" ]]; then
+        tgt_max_brightness="$(cat "$tgt_dir/max_brightness")"
+        gate_percent="$(sed -n 's/^low_brightness_gate_percent=\([0-9]\+\)$/\1/p' "$DISPLAY_CONFIG" | tail -n1)"
+        [[ "$gate_percent" =~ ^[0-9]+$ && "$gate_percent" -le 100 ]] || gate_percent=$LOW_BRIGHTNESS_GATE_DEFAULT_PERCENT
+        if [[ "$tgt_max_brightness" -gt 0 ]]; then
+            floor=$(( tgt_max_brightness * gate_percent / 100 ))
+            # Rescale onto [floor, max] instead of hard-clamping, so the
+            # requester's full 0-100% range stays usable with no dead zone
+            # at the bottom - 0 maps to the floor, max still maps to max.
+            val=$(( floor + val * (tgt_max_brightness - floor) / tgt_max_brightness ))
         fi
     fi
     echo "$val" > "$tgt_dir/brightness"

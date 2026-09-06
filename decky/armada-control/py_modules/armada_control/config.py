@@ -7,6 +7,8 @@ from .system import (
     bottom_screen_brightness,
     bottom_screen_enabled,
     device_env,
+    low_brightness_gate_enabled,
+    low_brightness_gate_percent,
     mtp_enabled,
     os_version,
     perf_info,
@@ -39,6 +41,8 @@ def build_config(include_games=True):
         "osVersion": os_version(),
         "ablVersion": abl_version(),
         "ablAutoEnabled": abl_auto_enabled(),
+        "lowBrightnessGateEnabled": low_brightness_gate_enabled(),
+        "lowBrightnessGatePercent": low_brightness_gate_percent(),
         "bottomScreenSupported": bool(
             env.get("ARMADA_SECONDARY_CONNECTOR") and env.get("ARMADA_SECONDARY_TOUCHSCREEN")
         ),

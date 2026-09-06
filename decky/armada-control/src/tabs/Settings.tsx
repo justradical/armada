@@ -7,6 +7,8 @@ import {
   setBottomScreenBrightness as applyBottomScreenBrightness,
   setBottomScreenEnabled as applyBottomScreenEnabled,
   setControllerType as applyControllerType,
+  setLowBrightnessGateEnabled as applyLowBrightnessGateEnabled,
+  setLowBrightnessGatePercent as applyLowBrightnessGatePercent,
   setMtpEnabled as applyMtpEnabled,
   setDesktopMode as applyDesktopMode,
   setSleepMode as applySleepMode,
@@ -17,6 +19,7 @@ import { SelectEdit, SliderEdit, ToggleRow } from "../components/widgets";
 import type { Config } from "../types";
 
 const BOTTOM_SCREEN_BRIGHTNESS_DELAY_MS: number = 150;
+const LOW_BRIGHTNESS_GATE_PERCENT_DELAY_MS: number = 150;
 
 export function Settings({ config, setConfig }: {
   config: Config;
@@ -25,10 +28,15 @@ export function Settings({ config, setConfig }: {
   const bottomScreenBrightnessTimer = useRef<number | undefined>(undefined);
   const bottomScreenBrightnessRequest = useRef<number>(0);
   const appliedBottomScreenBrightness = useRef<number>(config.bottomScreenBrightness);
+  const lowBrightnessGatePercentTimer = useRef<number | undefined>(undefined);
+  const lowBrightnessGatePercentRequest = useRef<number>(0);
+  const appliedLowBrightnessGatePercent = useRef<number>(config.lowBrightnessGatePercent);
 
   useEffect(() => () => {
     window.clearTimeout(bottomScreenBrightnessTimer.current);
     bottomScreenBrightnessRequest.current += 1;
+    window.clearTimeout(lowBrightnessGatePercentTimer.current);
+    lowBrightnessGatePercentRequest.current += 1;
   }, []);
 
   const setSshEnabled = async (enabled: boolean) => {
@@ -76,6 +84,39 @@ export function Settings({ config, setConfig }: {
     } catch (error) {
       setConfig((current) => (current ? { ...current, ablAutoEnabled: !enabled } : current));
     }
+  };
+  const setLowBrightnessGateEnabled = async (enabled: boolean) => {
+    if (enabled === !!config.lowBrightnessGateEnabled) {
+      return;
+    }
+    setConfig((current) => (current ? { ...current, lowBrightnessGateEnabled: enabled } : current));
+    try {
+      const applied = await applyLowBrightnessGateEnabled(enabled);
+      setConfig((current) => (current ? { ...current, lowBrightnessGateEnabled: applied } : current));
+    } catch (error) {
+      setConfig((current) => (current ? { ...current, lowBrightnessGateEnabled: !enabled } : current));
+      toaster.toast({ title: "Could not change low-brightness gate", body: String(error) });
+    }
+  };
+  const setLowBrightnessGatePercent = (percent: number) => {
+    setConfig((current) => (current ? { ...current, lowBrightnessGatePercent: percent } : current));
+    window.clearTimeout(lowBrightnessGatePercentTimer.current);
+    const request = ++lowBrightnessGatePercentRequest.current;
+    lowBrightnessGatePercentTimer.current = window.setTimeout(async () => {
+      try {
+        const applied = await applyLowBrightnessGatePercent(percent);
+        if (request !== lowBrightnessGatePercentRequest.current) return;
+        appliedLowBrightnessGatePercent.current = applied;
+        setConfig((current) => (current ? { ...current, lowBrightnessGatePercent: applied } : current));
+      } catch (error) {
+        if (request !== lowBrightnessGatePercentRequest.current) return;
+        setConfig((current) => (current ? {
+          ...current,
+          lowBrightnessGatePercent: appliedLowBrightnessGatePercent.current,
+        } : current));
+        toaster.toast({ title: "Could not change minimum brightness", body: String(error) });
+      }
+    }, LOW_BRIGHTNESS_GATE_PERCENT_DELAY_MS);
   };
   const setBottomScreenEnabled = async (enabled: boolean) => {
     if (enabled === !!config.bottomScreenEnabled) {
@@ -155,6 +196,22 @@ export function Settings({ config, setConfig }: {
         <Field label="ABL Version" description={config.ablVersion || "unknown"} />
       </PanelSection>
       <PanelSection title="Experimental">
+        <ToggleRow
+          label="Disable Low Brightness"
+          description="On some panels, very low brightness causes a visible green tint. This stops the screen from going below the minimum set here."
+          value={!!config.lowBrightnessGateEnabled}
+          onChange={setLowBrightnessGateEnabled}
+        />
+        {!!config.lowBrightnessGateEnabled && (
+          <SliderEdit
+            label="Minimum Brightness"
+            value={config.lowBrightnessGatePercent}
+            min={0}
+            max={50}
+            step={1}
+            onChange={setLowBrightnessGatePercent}
+          />
+        )}
         {config.bottomScreenSupported && (
           <>
             <ToggleRow

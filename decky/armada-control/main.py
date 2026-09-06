@@ -18,6 +18,8 @@ from armada_control.system import (
     set_abl_auto_enabled,
     set_bottom_screen_brightness,
     set_bottom_screen_enabled,
+    set_low_brightness_gate_enabled,
+    set_low_brightness_gate_percent,
     set_mtp_enabled,
     set_desktop_mode,
     set_sleep_mode,
@@ -61,6 +63,12 @@ class Plugin:
 
     async def set_abl_auto_enabled(self, enabled):
         return await asyncio.to_thread(set_abl_auto_enabled, enabled)
+
+    async def set_low_brightness_gate_enabled(self, enabled):
+        return await asyncio.to_thread(set_low_brightness_gate_enabled, enabled)
+
+    async def set_low_brightness_gate_percent(self, percent):
+        return await asyncio.to_thread(set_low_brightness_gate_percent, percent)
 
     async def set_bottom_screen_enabled(self, enabled):
         return await asyncio.to_thread(set_bottom_screen_enabled, enabled)
