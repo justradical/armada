@@ -17,6 +17,7 @@ ARG JUPITER_HW_SUPPORT_PKG=ghcr.io/armada-os/armada-packages/jupiter-hw-support@
 ARG ARMADA_SPLASH_PKG=ghcr.io/armada-os/armada-packages/armada-splash@sha256:6b018ab61218ad5b760fc93b27f7f6af4af4fb6301cb1ed4711cd33ded8c0ea0
 ARG ARMADA_RGB_PKG=ghcr.io/armada-os/armada-packages/armada-rgb@sha256:a7b66324d7bf8030e260d5f2fc9074ad9ced7c47852187783f5e3e082d0ebc25
 ARG UMTP_RESPONDER_PKG=ghcr.io/armada-os/armada-packages/umtp-responder@sha256:0e7f962145b72de85c2a3563d947c6357fc3a1a34797b7106cbff1c8832078ea
+ARG ARMADA_BOTTOM_TOUCHPADS_PKG=ghcr.io/justradical/armada-packages/armada-bottom-touchpads@sha256:d83df1dce09cb68011462ed1f21cc558566e52754af21638cd8bd77a50a81ec0
 ARG CHUNKAH_IMAGE=quay.io/coreos/chunkah@sha256:ff8b8b466a942ec6000445d4001fc661e2fc5a952ad9ee29b4de9ab09d1d1708
 ARG BASE_IMAGE=quay.io/fedora/fedora-bootc:44
 
@@ -38,6 +39,7 @@ FROM ${MESA_X86_PKG} AS mesa-x86
 FROM ${EXTEST_PKG} AS extest
 FROM ${ARMADA_SPLASH_PKG} AS armada-splash
 FROM ${ARMADA_RGB_PKG} AS armada-rgb
+FROM ${ARMADA_BOTTOM_TOUCHPADS_PKG} AS armada-bottom-touchpads
 FROM ${UMTP_RESPONDER_PKG} AS umtp-responder
 
 FROM docker.io/library/node:22-slim AS decky-build
@@ -81,6 +83,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=bind,from=extest,source=/,target=/packages/extest \
     --mount=type=bind,from=armada-splash,source=/rpms,target=/packages/armada-splash \
     --mount=type=bind,from=armada-rgb,source=/rpms,target=/packages/armada-rgb \
+    --mount=type=bind,from=armada-bottom-touchpads,source=/rpms,target=/packages/armada-bottom-touchpads \
     --mount=type=bind,from=umtp-responder,source=/rpms,target=/packages/umtp-responder \
     --mount=type=bind,from=decky-build,source=/build/armada-control/dist,target=/packages/decky-dist \
     --mount=type=bind,from=decky-build,source=/build/armada-store/dist,target=/packages/decky-store-dist \

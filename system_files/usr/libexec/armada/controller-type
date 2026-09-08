@@ -118,11 +118,14 @@ def current_target_paths(path):
     return re.findall(r'"([^"]*)"', result.stdout)
 
 
+EXTRA_TARGET_TYPES = ("keyboard", "mouse", "touchpad")
+
+
 def extra_targets(path):
     extras = []
     for target_path in current_target_paths(path):
         segment = target_path.rsplit("/", 1)[-1].rstrip("0123456789")
-        if segment in ("keyboard", "mouse") and segment not in extras:
+        if segment in EXTRA_TARGET_TYPES and segment not in extras:
             extras.append(segment)
     return extras
 
