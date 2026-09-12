@@ -2,6 +2,7 @@
   "global": {
     "cores": null,
     "fexProfile": "default",
+    "forceFsrAsQsr": true,
     "gamescopeCores": null,
     "gamescopeNice": -20,
     "gamescopeRr": false,

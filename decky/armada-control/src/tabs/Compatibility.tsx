@@ -43,7 +43,7 @@ import type { Config } from "../types";
 
 const PERF_KEYS = [
   "cores", "wineTopology", "nice", "gamescopeCores",
-  "gamescopeNice", "gamescopeRr", "scheduler",
+  "gamescopeNice", "gamescopeRr", "scheduler", "forceFsrAsQsr",
 ];
 
 function cpulistError(text: string, cpuCount: number): string {
@@ -735,6 +735,11 @@ export function Compatibility({ config, setConfig }: { config: Config; setConfig
           onChange={setGamescopeVulkanRealtime}
         />
       ) : null}
+      <ToggleField
+        label="Force FSR as QSR"
+        checked={values.forceFsrAsQsr !== false}
+        onChange={(on) => patchSettings({ forceFsrAsQsr: on })}
+      />
       <div className="armada-subheader">System</div>
       <SelectEdit
         label="CPU Scheduler"

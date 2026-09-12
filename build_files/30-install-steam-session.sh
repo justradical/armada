@@ -15,7 +15,8 @@ dnf5 -y install --setopt=install_weak_deps=False \
     gamemode \
     gtk2 \
     openal-soft \
-    xorg-x11-server-Xwayland
+    xorg-x11-server-Xwayland \
+    xorg-x11-utils
 
 # Patched InputPlumber: dpad signed-axis fix
 dnf5 -y install --setopt=install_weak_deps=False /packages/inputplumber/inputplumber-*.rpm

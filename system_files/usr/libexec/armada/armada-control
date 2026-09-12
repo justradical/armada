@@ -552,6 +552,56 @@ def action_write_config(request):
     return {"ok": True}
 
 
+GAMESCOPE_FORCE_FSR_AS_QSR_ATOM = "GAMESCOPE_FORCE_FSR_AS_QSR"
+
+
+def resolve_force_fsr_as_qsr(merged):
+    value = merged.get("forceFsrAsQsr")
+    return value if isinstance(value, bool) else True
+
+
+def read_proc_environ(pid):
+    try:
+        with open(f"/proc/{pid}/environ", "rb") as f:
+            raw = f.read()
+    except OSError:
+        return {}
+    env = {}
+    for entry in raw.split(b"\0"):
+        if b"=" not in entry:
+            continue
+        key, _, value = entry.partition(b"=")
+        try:
+            env[key.decode()] = value.decode()
+        except UnicodeDecodeError:
+            continue
+    return env
+
+
+def set_gamescope_force_fsr_as_qsr(pid, enabled):
+    # Best-effort live nudge via the game's inherited DISPLAY: on failure
+    # (no DISPLAY, xprop missing, session gone) the startup env var the
+    # session script exports still supplies the right default on next
+    # restart, so a failure here is never fatal.
+    env = read_proc_environ(pid)
+    display = env.get("DISPLAY")
+    if not display:
+        return False
+    xprop_env = {"DISPLAY": display, "PATH": "/usr/bin"}
+    if env.get("XAUTHORITY"):
+        xprop_env["XAUTHORITY"] = env["XAUTHORITY"]
+    try:
+        subprocess.run(
+            ["/usr/bin/xprop", "-root", "-f", GAMESCOPE_FORCE_FSR_AS_QSR_ATOM, "32c",
+             "-set", GAMESCOPE_FORCE_FSR_AS_QSR_ATOM, "1" if enabled else "0"],
+            check=True, env=xprop_env,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5,
+        )
+        return True
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
 class PerfManager:
     """Owns the perf state file: global defaults, the per-game override,
     and the pidfd that restores defaults on game exit."""
@@ -669,6 +719,7 @@ class PerfManager:
         # track every launch: re-apply needs the pid, and a new launch must
         # displace a stale override
         session_pid = self.steam_session_pid(pid, appid)
+        set_gamescope_force_fsr_as_qsr(session_pid, resolve_force_fsr_as_qsr(merged))
         override = self.gamescope_layer(merged)
         override.update({"appid": appid, "pid": session_pid})
         state = armada_perf.read_state()
@@ -684,8 +735,8 @@ class PerfManager:
         if not isinstance(override, dict) or not self.pid_alive(override.get("pid")):
             raise RuntimeError("no running game to re-apply")
         tweaks = armada_game_tweaks.load()
-        clean = armada_perf.sanitize_perf(
-            armada_game_tweaks.merged_settings(tweaks, override.get("appid")), self.env)
+        merged = armada_game_tweaks.merged_settings(tweaks, override.get("appid"))
+        clean = armada_perf.sanitize_perf(merged, self.env)
         cores = clean.get("cores")
         if clean.get("scheduler") == "cosmos":
             cores = None  # composition: cosmos gets the domain, no hard mask
@@ -701,6 +752,7 @@ class PerfManager:
                         os.sched_setaffinity(tid, armada_perf.online_cpus())
                 except OSError:
                     continue
+        set_gamescope_force_fsr_as_qsr(override["pid"], resolve_force_fsr_as_qsr(merged))
         self.refresh(keep_override=True)
         return {"pids": len(pids)}
 

@@ -14,7 +14,7 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
-# Pin the tweaks key published by the plugin for the session consumer.
+# Pin the tweaks keys published by the plugin for the session consumer.
 grep -Fq 'nextTweaks.global.gamescopeVulkanRealtime = on' \
     "$ROOT/decky/armada-control/src/tabs/Compatibility.tsx" || {
     printf 'FAIL: plugin no longer writes global.gamescopeVulkanRealtime\n' >&2
@@ -25,14 +25,22 @@ TWEAKS_FIXTURE="$WORK/game-tweaks.json"
 TWEAKS_DEFAULTS_FIXTURE="$ROOT/system_files/usr/share/armada/game-tweaks.json"
 TWEAKS_HELPER="$ROOT/system_files/usr/libexec/armada/armada-game-tweaks"
 SESSION_FILE="$ROOT/system_files/usr/share/gamescope-session-plus/sessions.d/steam"
-SESSION_REALTIME_BLOCK="$(sed -n '/^_armada_game_tweaks=/,/^unset _armada_game_tweaks/p' "$SESSION_FILE")"
+SESSION_TWEAKS_ENV_BLOCK="$(sed -n '/^_armada_game_tweaks=/,/^unset _armada_game_tweaks/p' "$SESSION_FILE")"
 
 session_realtime_value() {
     env -u GAMESCOPE_FORCE_VULKAN_REALTIME ARMADA_TWEAKS_CONFIG="$TWEAKS_FIXTURE" \
         ARMADA_TWEAKS_DEFAULTS_CONFIG="$TWEAKS_DEFAULTS_FIXTURE" \
         ARMADA_GAME_TWEAKS_HELPER="$TWEAKS_HELPER" \
         ARMADA_GAME_TWEAKS_LIB="$ROOT/system_files/usr/lib/armada" \
-        bash -c "$SESSION_REALTIME_BLOCK"$'\n''printf "%s" "${GAMESCOPE_FORCE_VULKAN_REALTIME:-}"'
+        bash -c "$SESSION_TWEAKS_ENV_BLOCK"$'\n''printf "%s" "${GAMESCOPE_FORCE_VULKAN_REALTIME:-}"'
+}
+
+session_force_fsr_as_qsr_value() {
+    env -u GAMESCOPE_FORCE_FSR_AS_QSR ARMADA_TWEAKS_CONFIG="$TWEAKS_FIXTURE" \
+        ARMADA_TWEAKS_DEFAULTS_CONFIG="$TWEAKS_DEFAULTS_FIXTURE" \
+        ARMADA_GAME_TWEAKS_HELPER="$TWEAKS_HELPER" \
+        ARMADA_GAME_TWEAKS_LIB="$ROOT/system_files/usr/lib/armada" \
+        bash -c "$SESSION_TWEAKS_ENV_BLOCK"$'\n''printf "%s" "${GAMESCOPE_FORCE_FSR_AS_QSR:-}"'
 }
 
 printf '{"global":{"gamescopeVulkanRealtime":true}}\n' > "$TWEAKS_FIXTURE"
@@ -48,6 +56,22 @@ printf '{"global":{"gamescopeVulkanRealtime":false}}\n' > "$TWEAKS_FIXTURE"
 printf '{"global":{}}\n' > "$TWEAKS_FIXTURE"
 [[ "$(session_realtime_value)" == 1 ]] || {
     printf 'FAIL: absent session setting did not inherit factory realtime policy\n' >&2
+    exit 1
+}
+
+printf '{"global":{"forceFsrAsQsr":false}}\n' > "$TWEAKS_FIXTURE"
+[[ "$(session_force_fsr_as_qsr_value)" == 0 ]] || {
+    printf 'FAIL: disabled session setting did not export a QSR override\n' >&2
+    exit 1
+}
+printf '{"global":{"forceFsrAsQsr":true}}\n' > "$TWEAKS_FIXTURE"
+[[ -z "$(session_force_fsr_as_qsr_value)" ]] || {
+    printf 'FAIL: enabled session setting exported an unnecessary QSR override\n' >&2
+    exit 1
+}
+printf '{"global":{}}\n' > "$TWEAKS_FIXTURE"
+[[ -z "$(session_force_fsr_as_qsr_value)" ]] || {
+    printf 'FAIL: absent session setting exported an unnecessary QSR override\n' >&2
     exit 1
 }
 
@@ -140,7 +164,7 @@ check("override wins", eff["gamescopeRr"] is True)
 factory_tweaks = gt.load()
 factory_global = factory_tweaks["global"]
 check("factory declares every displayed default", set(factory_global) == {
-    "cores", "fexProfile", "gamescopeCores", "gamescopeNice", "gamescopeRr",
+    "cores", "fexProfile", "forceFsrAsQsr", "gamescopeCores", "gamescopeNice", "gamescopeRr",
     "gamescopeVulkanRealtime", "nice", "scheduler", "thunks", "wineTopology",
 })
 check("factory FEX profile loaded", factory_global["fexProfile"] == "default")
@@ -150,7 +174,8 @@ check("factory game policy loaded",
       factory_global["nice"] == 0 and factory_global["wineTopology"] is True)
 check("factory gamescope policy loaded",
       factory_global["gamescopeNice"] == -20 and factory_global["gamescopeRr"] is False and
-      factory_global["gamescopeVulkanRealtime"] is True)
+      factory_global["gamescopeVulkanRealtime"] is True and
+      factory_global["forceFsrAsQsr"] is True)
 check("factory scheduler loaded", factory_global["scheduler"] == "eevdf")
 check("factory thunk defaults loaded",
       set(factory_global["thunks"]) == {"Vulkan", "GL", "drm", "WaylandClient", "asound"} and
@@ -376,6 +401,12 @@ state = ap.read_state()
 check("refresh writes global layer", state["global"].get("gamescopeNice") == -5)
 check("no override at startup", "override" not in state)
 
+# forceFsrAsQsr is pushed live as an X11 atom write, not tracked in the
+# perf-state JSON; record calls instead of touching a real X server.
+qsr_calls = []
+real_set_qsr = control.set_gamescope_force_fsr_as_qsr
+control.set_gamescope_force_fsr_as_qsr = lambda pid, enabled: qsr_calls.append((pid, enabled))
+
 child = subprocess.Popen(["sleep", "30"])
 try:
     manager.game_launched("620", child.pid)
@@ -385,16 +416,24 @@ try:
     check("override carries rr", override.get("gamescopeRr") is True)
     check("cosmos domain from cores", override.get("schedulerDomain") == [3, 4, 5, 6, 7])
     check("pidfd armed", manager.pidfd is not None)
+    check("launch pushes factory-default QSR (no override set)",
+          qsr_calls and qsr_calls[-1] == (child.pid, True))
 
     # live tweaks edit rebuilds the override instead of dropping it
     with gt.OVERRIDES_CONFIG.open("w") as f:
         json.dump({"global": {"gamescopeNice": -5},
-                   "games": {"620": {"gamescopeRr": False, "scheduler": "lavd"}}}, f)
+                   "games": {"620": {"gamescopeRr": False, "scheduler": "lavd",
+                                      "forceFsrAsQsr": False}}}, f)
     manager.refresh(keep_override=True)
     override = ap.read_state().get("override", {})
     check("keep_override survives edit", override.get("pid") == child.pid)
     check("override rebuilt from new tweaks",
           override.get("scheduler") == "lavd" and override.get("gamescopeRr") is False)
+
+    qsr_calls.clear()
+    manager.reapply()
+    check("reapply pushes the per-game QSR override",
+          qsr_calls == [(child.pid, False)])
 
     # a launch whose layer equals global still tracks the session
     child2 = subprocess.Popen(["sleep", "30"])
@@ -408,6 +447,7 @@ try:
 finally:
     child.terminate()
     child.wait()
+    control.set_gamescope_force_fsr_as_qsr = real_set_qsr
 
 manager.game_exited()
 check("exit restores globals", "override" not in ap.read_state())

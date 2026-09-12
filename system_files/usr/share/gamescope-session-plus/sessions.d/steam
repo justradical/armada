@@ -40,6 +40,15 @@ if [[ "$_armada_vulkan_realtime" == true ]]; then
 fi
 unset _armada_game_tweaks _armada_vulkan_realtime
 
+# Gamescope defaults to substituting Snapdragon GSR for Steam's FSR ("Sharp")
+# scaling filter; only override it when the user has explicitly disabled it.
+_armada_game_tweaks="${ARMADA_GAME_TWEAKS_HELPER:-/usr/libexec/armada/armada-game-tweaks}"
+_armada_force_fsr_as_qsr="$("$_armada_game_tweaks" get global.forceFsrAsQsr 2>/dev/null)"
+if [[ "$_armada_force_fsr_as_qsr" == false ]]; then
+    export GAMESCOPE_FORCE_FSR_AS_QSR=0
+fi
+unset _armada_game_tweaks _armada_force_fsr_as_qsr
+
 # Set up first time bootstrap status
 export STEAM_BOOTSTRAP_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/gamescope/bootstrap.cfg"
 
