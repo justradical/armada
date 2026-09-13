@@ -46,6 +46,7 @@ for package in \
     gamescope-session-steam \
     hexagonrpc \
     inputplumber \
+    libssc \
     mangohud \
     msm-firmware-loader \
     mesa-vulkan-drivers \

@@ -95,11 +95,18 @@ dnf5 -y install --setopt=install_weak_deps=False \
 dnf5 -y install --setopt=install_weak_deps=False \
     /packages/hexagonrpc/hexagonrpc-*.rpm
 
+dnf5 -y install --setopt=install_weak_deps=False \
+    /packages/libssc/libssc-[0-9]*.rpm
+
 # CachyOS Proton's ARM64 GStreamer asks for Arch's libbz2 soname.
 ln -sf libbz2.so.1 /usr/lib64/libbz2.so.1.0
 
 # Some AppImages link zlib's unversioned development soname.
 ln -sf libz.so.1 /usr/lib64/libz.so
+
+# InputPlumber's SSC driver dlopens the unversioned name; only libssc-devel
+# ships that symlink, and we don't want devel headers on the runtime image.
+ln -sf libssc.so.2 /usr/lib64/libssc.so
 
 # pressure-vessel needs en_US.UTF-8; the base image ships only minimal-langpack (C.utf8).
 dnf5 -y install --setopt=install_weak_deps=False glibc-langpack-en
