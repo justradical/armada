@@ -21,6 +21,7 @@ ARG UMTP_RESPONDER_PKG=ghcr.io/armada-os/armada-packages/umtp-responder@sha256:0
 ARG HEXAGONRPC_PKG=ghcr.io/justradical/armada-packages/hexagonrpc@sha256:cc60e99f394975e3fdd864a2a79a7a11a60b668a1a2b4a202160088fc6cf86a8
 ARG MSM_FIRMWARE_LOADER_PKG=ghcr.io/justradical/armada-packages/msm-firmware-loader@sha256:47ad076299074e326e681e738115369a3e32aae286e78bf3a993dd218df1e091
 ARG LIBSSC_PKG=ghcr.io/justradical/armada-packages/libssc@sha256:58c85ab328eaa01ddb5fd4a2e4dbe99f004e5be883da58a6294d0722db7e9dcc
+ARG MAKE_DYNPART_MAPPINGS_PKG=ghcr.io/justradical/armada-packages/make-dynpart-mappings@sha256:40a2eab6b25babde760d6034e622f2905e525e0d684e73902d2fd6abcb5dc8e4
 ARG CHUNKAH_IMAGE=quay.io/coreos/chunkah@sha256:ff8b8b466a942ec6000445d4001fc661e2fc5a952ad9ee29b4de9ab09d1d1708
 ARG BASE_IMAGE=quay.io/fedora/fedora-bootc:44
 
@@ -47,6 +48,7 @@ FROM ${UMTP_RESPONDER_PKG} AS umtp-responder
 FROM ${HEXAGONRPC_PKG} AS hexagonrpc
 FROM ${MSM_FIRMWARE_LOADER_PKG} AS msm-firmware-loader
 FROM ${LIBSSC_PKG} AS libssc
+FROM ${MAKE_DYNPART_MAPPINGS_PKG} AS make-dynpart-mappings
 
 FROM docker.io/library/node:22-slim AS decky-build
 WORKDIR /build/armada-control
@@ -94,6 +96,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=bind,from=hexagonrpc,source=/rpms,target=/packages/hexagonrpc \
     --mount=type=bind,from=msm-firmware-loader,source=/rpms,target=/packages/msm-firmware-loader \
     --mount=type=bind,from=libssc,source=/rpms,target=/packages/libssc \
+    --mount=type=bind,from=make-dynpart-mappings,source=/rpms,target=/packages/make-dynpart-mappings \
     --mount=type=bind,from=decky-build,source=/build/armada-control/dist,target=/packages/decky-dist \
     --mount=type=bind,from=decky-build,source=/build/armada-store/dist,target=/packages/decky-store-dist \
     --mount=type=cache,dst=/var/cache \

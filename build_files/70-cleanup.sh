@@ -47,6 +47,7 @@ for package in \
     hexagonrpc \
     inputplumber \
     libssc \
+    make-dynpart-mappings \
     mangohud \
     msm-firmware-loader \
     mesa-vulkan-drivers \

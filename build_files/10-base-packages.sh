@@ -90,6 +90,9 @@ dnf5 -y install --setopt=install_weak_deps=False \
     /packages/umtp-responder/umtp-responder-*.rpm
 
 dnf5 -y install --setopt=install_weak_deps=False \
+    /packages/make-dynpart-mappings/make-dynpart-mappings-*.rpm
+
+dnf5 -y install --setopt=install_weak_deps=False \
     /packages/msm-firmware-loader/msm-firmware-loader-*.rpm
 
 dnf5 -y install --setopt=install_weak_deps=False \
