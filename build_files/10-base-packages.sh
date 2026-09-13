@@ -89,6 +89,9 @@ dnf5 -y install --setopt=install_weak_deps=False \
 dnf5 -y install --setopt=install_weak_deps=False \
     /packages/umtp-responder/umtp-responder-*.rpm
 
+dnf5 -y install --setopt=install_weak_deps=False \
+    /packages/hexagonrpc/hexagonrpc-*.rpm
+
 # CachyOS Proton's ARM64 GStreamer asks for Arch's libbz2 soname.
 ln -sf libbz2.so.1 /usr/lib64/libbz2.so.1.0
 

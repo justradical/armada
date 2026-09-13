@@ -44,6 +44,7 @@ for package in \
     terra-gamescope-libs \
     gamescope-session \
     gamescope-session-steam \
+    hexagonrpc \
     inputplumber \
     mangohud \
     mesa-vulkan-drivers \

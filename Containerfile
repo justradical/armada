@@ -18,6 +18,7 @@ ARG JUPITER_HW_SUPPORT_PKG=ghcr.io/armada-os/armada-packages/jupiter-hw-support@
 ARG ARMADA_SPLASH_PKG=ghcr.io/armada-os/armada-packages/armada-splash@sha256:6b018ab61218ad5b760fc93b27f7f6af4af4fb6301cb1ed4711cd33ded8c0ea0
 ARG ARMADA_RGB_PKG=ghcr.io/armada-os/armada-packages/armada-rgb@sha256:269a0b19aee60cf6c0b31b2cee60e996115e912cd605f5e6204813eccfd57fe7
 ARG UMTP_RESPONDER_PKG=ghcr.io/armada-os/armada-packages/umtp-responder@sha256:0e7f962145b72de85c2a3563d947c6357fc3a1a34797b7106cbff1c8832078ea
+ARG HEXAGONRPC_PKG=ghcr.io/justradical/armada-packages/hexagonrpc@sha256:cc60e99f394975e3fdd864a2a79a7a11a60b668a1a2b4a202160088fc6cf86a8
 ARG CHUNKAH_IMAGE=quay.io/coreos/chunkah@sha256:ff8b8b466a942ec6000445d4001fc661e2fc5a952ad9ee29b4de9ab09d1d1708
 ARG BASE_IMAGE=quay.io/fedora/fedora-bootc:44
 
@@ -41,6 +42,7 @@ FROM ${EXTEST_PKG} AS extest
 FROM ${ARMADA_SPLASH_PKG} AS armada-splash
 FROM ${ARMADA_RGB_PKG} AS armada-rgb
 FROM ${UMTP_RESPONDER_PKG} AS umtp-responder
+FROM ${HEXAGONRPC_PKG} AS hexagonrpc
 
 FROM docker.io/library/node:22-slim AS decky-build
 WORKDIR /build/armada-control
@@ -85,6 +87,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=bind,from=armada-splash,source=/rpms,target=/packages/armada-splash \
     --mount=type=bind,from=armada-rgb,source=/rpms,target=/packages/armada-rgb \
     --mount=type=bind,from=umtp-responder,source=/rpms,target=/packages/umtp-responder \
+    --mount=type=bind,from=hexagonrpc,source=/rpms,target=/packages/hexagonrpc \
     --mount=type=bind,from=decky-build,source=/build/armada-control/dist,target=/packages/decky-dist \
     --mount=type=bind,from=decky-build,source=/build/armada-store/dist,target=/packages/decky-store-dist \
     --mount=type=cache,dst=/var/cache \
