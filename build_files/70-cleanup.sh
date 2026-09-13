@@ -47,6 +47,7 @@ for package in \
     hexagonrpc \
     inputplumber \
     mangohud \
+    msm-firmware-loader \
     mesa-vulkan-drivers \
     NetworkManager \
     powerdevil \

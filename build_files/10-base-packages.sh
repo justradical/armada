@@ -90,6 +90,9 @@ dnf5 -y install --setopt=install_weak_deps=False \
     /packages/umtp-responder/umtp-responder-*.rpm
 
 dnf5 -y install --setopt=install_weak_deps=False \
+    /packages/msm-firmware-loader/msm-firmware-loader-*.rpm
+
+dnf5 -y install --setopt=install_weak_deps=False \
     /packages/hexagonrpc/hexagonrpc-*.rpm
 
 # CachyOS Proton's ARM64 GStreamer asks for Arch's libbz2 soname.
