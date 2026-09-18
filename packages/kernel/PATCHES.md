@@ -279,7 +279,7 @@ Where it has not, `notes` say so with the mainline revision that was checked.
 - `patches/0036_ASoC--qcom--sc8280xp-Add-support-for-Primary-I2S.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0036_ASoC--qcom--sc8280xp-Add-support-for-Primary-I2S.patch
   upstream: https://lore.kernel.org/r/20251008-topic-sm8x50-next-hdk-i2s-v2-3-6b7d38d4ad5e@linaro.org
-  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
+  notes: This exact patch is not in mainline, but 088c4404b3d7 (7.3) does the same MI2S clock and DAI-format setup through the per-board priv data the 7.3 machine-driver refactor added. Revisit at the 7.3 bump: the board entry replaces this patch.
 - `patches/0032-ASoC-codecs-aw88166-AYN-Products-Specific-modificati.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0032-ASoC-codecs-aw88166-AYN-Products-Specific-modificati.patch
   upstream: unknown
