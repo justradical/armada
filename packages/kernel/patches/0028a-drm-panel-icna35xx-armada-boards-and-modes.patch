@@ -7,6 +7,8 @@ Armada's delta on top of the accepted ICNA35XX driver and binding:
 
   - two more boards that use these DDICs, the AYANEO Pocket EVO
     (ICNA3512) and the AYN Thor Lite (ICNA3520);
+  - the armada,dpu-8bpc-dither property the Thor and Odin 3 panel nodes
+    set, so the binding does not reject them;
   - the 120 Hz and 60 Hz mode pairs Armada ships, with the per-mode
     register sequences the vendor trees use, in place of the single
     fixed mode upstream describes. The ICNA3520 120 Hz sequence is the
@@ -21,7 +23,7 @@ Refresh-rate switching on these panels needs the mode pairs; upstream
 carries one mode per panel, so this cannot go upstream as-is.
 ---
 diff --git a/Documentation/devicetree/bindings/display/panel/chipone,icna3512.yaml b/Documentation/devicetree/bindings/display/panel/chipone,icna3512.yaml
-index 90e69f30c..d37b36cd4 100644
+index 90e69f30c..5420751e9 100644
 --- a/Documentation/devicetree/bindings/display/panel/chipone,icna3512.yaml
 +++ b/Documentation/devicetree/bindings/display/panel/chipone,icna3512.yaml
 @@ -22,6 +22,7 @@ properties:
@@ -40,6 +42,19 @@ index 90e69f30c..d37b36cd4 100644
            - const: chipone,icna3520
  
    reg:
+@@ -45,6 +47,12 @@ properties:
+   reset-gpios: true
+   rotation: true
+ 
++  armada,dpu-8bpc-dither:
++    type: boolean
++    description:
++      Armada-only. The DSI link runs at 8bpc, so the DPU dithers its 10-bit
++      downconvert for this panel.
++
+ required:
+   - compatible
+   - reg
 diff --git a/drivers/gpu/drm/panel/panel-chipone-icna35xx.c b/drivers/gpu/drm/panel/panel-chipone-icna35xx.c
 index 86d096455..1f7db0a3c 100644
 --- a/drivers/gpu/drm/panel/panel-chipone-icna35xx.c
