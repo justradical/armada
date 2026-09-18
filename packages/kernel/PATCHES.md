@@ -5,6 +5,9 @@ commit, or `armada` for original work; a URL source with no `notes` is verbatim.
 `notes` explain modifications or important differences from linked upstream work.
 A patch entry's `upstream` is `local` for an Armada-authored change, `unknown` when
 no equivalent submission was found, or a permanent URL to the upstream submission.
+Where a submission has been accepted, `notes` name the mainline commit and the
+release it is in, so the patch can be dropped when BASE.env reaches that release.
+Where it has not, `notes` say so with the mainline revision that was checked.
 
 - `patches/0002-qcom-dispcc-sm8550-Fix-disp_cc_mdss_mdp_clk_src.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0002-qcom-dispcc-sm8550-Fix-disp_cc_mdss_mdp_clk_src.patch
@@ -46,11 +49,11 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0028-dt-bindings-display-panel-chipone-icna3512.patch`
   source: https://git.kernel.org/linus/392313ce84a8
   upstream: https://lore.kernel.org/r/20260607-icna35xx-v4-1-64de514add34@gmail.com
-  notes: The accepted commit, verbatim. Landed after 7.2, so it is still carried here.
+  notes: The accepted commit, verbatim. In 7.3: drop when BASE.env moves to 7.3, keeping `patches/0028a-drm-panel-icna35xx-armada-boards-and-modes.patch`.
 - `patches/0028-drm-panel-Add-panel-driver-for-Chipone-ICNA35XX-base.patch`
   source: https://git.kernel.org/linus/f747473a838e
   upstream: https://lore.kernel.org/r/20260607-icna35xx-v4-2-64de514add34@gmail.com
-  notes: The accepted commit; only the Kconfig and Makefile hunks carry Armada's context. Landed after 7.2, so it is still carried here.
+  notes: The accepted commit; only the Kconfig and Makefile hunks carry Armada's context. In 7.3: drop when BASE.env moves to 7.3, keeping `patches/0028a-drm-panel-icna35xx-armada-boards-and-modes.patch`.
 - `patches/0028a-drm-panel-icna35xx-armada-boards-and-modes.patch`
   source: armada
   upstream: local
@@ -66,10 +69,11 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0053-gpu-panel-st7703-add-Pocket-DS-lower-panel.patch`
   source: https://github.com/ROCKNIX/distribution/blob/7651a1b97d762d2c7dc335fa82a7a254c3a12927/projects/ROCKNIX/devices/SM8550/patches/linux/0053-gpu-panel-st7703-add-Pocket-DS-lower-panel.patch
   upstream: https://lore.kernel.org/r/20260723-b4-st7703-pocketds-lower-v1-2-e3db246589f4@gmail.com
+  notes: Matches the accepted commits 4c0fe6422f3a (driver) and 9836f0236b43 (binding) exactly. In 7.3: drop when BASE.env moves to 7.3.
 - `patches/0055_Synaptics-TD4328-LCD-panel.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0055_Synaptics-TD4328-LCD-panel.patch
   upstream: https://lore.kernel.org/r/20240424-ayn-odin2-initial-v1-4-e0aa05c991fd@gmail.com
-  notes: The carried implementation predates the linked upstream submission and is ported to Linux 7.2's managed DRM panel allocator.
+  notes: The carried implementation predates the linked upstream submission and is ported to Linux 7.2's managed DRM panel allocator. Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0056_Xm-Plus-XM91080G-panel.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0056_Xm-Plus-XM91080G-panel.patch
   upstream: unknown
@@ -120,11 +124,11 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0060-dt-bindings-silergy-sy7758.patch`
   source: https://git.kernel.org/linus/2019a2a7268f
   upstream: https://lore.kernel.org/r/178300990349.2239788.13080024963462152507.b4-ty@b4
-  notes: The accepted commit, verbatim. Landed after 7.2, so it is still carried here.
+  notes: The accepted commit, verbatim. In 7.3: drop when BASE.env moves to 7.3, keeping `patches/0061-backlight-sy7758-make-enable-gpio-optional.patch`.
 - `patches/0060-backlight-Add-SY7758-LED-driver.patch`
   source: https://git.kernel.org/linus/110d67699a43
   upstream: https://lore.kernel.org/r/178300990349.2239788.13080024963462152507.b4-ty@b4
-  notes: The accepted commit, verbatim. Landed after 7.2, so it is still carried here.
+  notes: The accepted commit, verbatim. In 7.3: drop when BASE.env moves to 7.3, keeping `patches/0061-backlight-sy7758-make-enable-gpio-optional.patch`.
 - `patches/0061-backlight-sy7758-make-enable-gpio-optional.patch`
   source: armada
   upstream: local
@@ -151,9 +155,11 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0015-touchscreen-edt-ft5x06-allow-to-override-input-name.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8250/patches/linux/0015-touchscreen-edt-ft5x06-allow-to-override-input-name.patch
   upstream: https://lore.kernel.org/r/20260409-ft5x06-label-v1-1-21e8a9ae9a60@gmail.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0030-input-rmi4-add-reset-gpio.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0030-input-rmi4-add-reset-gpio.patch
   upstream: https://lore.kernel.org/r/20250210050220.634497-2-felix@kaechele.ca
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0032-rmi4-silence-spam-irq-errors.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0032-rmi4-silence-spam-irq-errors.patch
   upstream: unknown
@@ -187,6 +193,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0029-Input-edt-ft5x06-add-no_regmap_bulk_read-option.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0029-Input-edt-ft5x06-add-no_regmap_bulk_read-option.patch
   upstream: https://lore.kernel.org/r/20260723-b4-ft5426-v1-3-d4b4e32be042@gmail.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0059_AYN-Odin2-Mini--hynitron--cstxxx.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0059_AYN-Odin2-Mini--hynitron--cstxxx.patch
   upstream: unknown
@@ -272,6 +279,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0036_ASoC--qcom--sc8280xp-Add-support-for-Primary-I2S.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0036_ASoC--qcom--sc8280xp-Add-support-for-Primary-I2S.patch
   upstream: https://lore.kernel.org/r/20251008-topic-sm8x50-next-hdk-i2s-v2-3-6b7d38d4ad5e@linaro.org
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0032-ASoC-codecs-aw88166-AYN-Products-Specific-modificati.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0032-ASoC-codecs-aw88166-AYN-Products-Specific-modificati.patch
   upstream: unknown
@@ -284,14 +292,15 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0054_sn3112-pwm-driver.patch`
   source: https://github.com/ROCKNIX/distribution/blob/4609c5017f350e6e2307ec909e328454d5bec062/projects/ROCKNIX/devices/SM8550/patches/linux/0054_sn3112-pwm-driver.patch
   upstream: https://lore.kernel.org/r/20240424-ayn-odin2-initial-v1-2-e0aa05c991fd@gmail.com
-  notes: Includes ROCKNIX #3110's fix for the arm64 probe crash: set_bit()/clear_bit() on a cast uint8_t[3] alignment-faults under LSE atomics, replaced with plain bitwise ops under priv->lock. The matching Odin 2 DTS change re-enables the sn3112 nodes that were disabled to dodge the crash.
+  notes: Includes ROCKNIX #3110's fix for the arm64 probe crash: set_bit()/clear_bit() on a cast uint8_t[3] alignment-faults under LSE atomics, replaced with plain bitwise ops under priv->lock. The matching Odin 2 DTS change re-enables the sn3112 nodes that were disabled to dodge the crash. Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/20260424_neil_armstrong_arm64_dts_qcom_sm8_456_50_add_missing_cx_power_domain_to_gcc.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/20260424_neil_armstrong_arm64_dts_qcom_sm8_456_50_add_missing_cx_power_domain_to_gcc.patch
   upstream: https://lore.kernel.org/r/20260615-topic-sm8x50-tie-gcc-to-cx-v2-0-6b5752dd4747@linaro.org
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/v9_20260729_qualcomm_crypto_qce_runtime_pm_interconnect.patch`
   source: https://lore.kernel.org/r/20260729110455.641256-1-kuldeep.singh@oss.qualcomm.com
   upstream: https://lore.kernel.org/r/20260729110455.641256-1-kuldeep.singh@oss.qualcomm.com
-  notes: Refreshed only its include context for Linux 7.2; runtime-PM and interconnect behavior is unchanged.
+  notes: Refreshed only its include context for Linux 7.2; runtime-PM and interconnect behavior is unchanged. Accepted as 6f5569203bb6, in 7.3: drop when BASE.env moves to 7.3.
 - `patches/0504-mailbox-qcom-ipcc-mask-summary-irq-for-suspend-to-ram.patch`
   source: https://github.com/ROCKNIX/distribution/commit/f955f5b6137554253e4d52bbe72f9b4936fb253d
   upstream: not submitted
@@ -322,6 +331,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0001-pcie-update-sm8550-dtsi.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0001-pcie-update-sm8550-dtsi.patch
   upstream: https://lore.kernel.org/r/20260611-wake-v2-33-2744251b1181@oss.qualcomm.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0520-arm64-dts-qcom-sm8550-add-a-pcie-suspend-opp.patch`
   source: armada
   upstream: not submitted
@@ -329,6 +339,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0120-20250728_konradybcio_gpu_cc_power_requirements_reality_check.patch`
   source: https://github.com/ROCKNIX/distribution/blob/ef264a238d5e2ba960145e3fda663dc27de49a80/projects/ROCKNIX/devices/SM8550/patches/linux/0120-20250728_konradybcio_gpu_cc_power_requirements_reality_check.patch
   upstream: https://lore.kernel.org/r/20250728-topic-gpucc_power_plumbing-v1-22-09c2480fe3e6@oss.qualcomm.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0121-pmdomain-qcom-rpmhpd-presync-floor-gmu-rails.patch`
   source: https://github.com/ROCKNIX/distribution/blob/ef264a238d5e2ba960145e3fda663dc27de49a80/projects/ROCKNIX/devices/SM8550/patches/linux/0121-pmdomain-qcom-rpmhpd-presync-floor-gmu-rails.patch
   source: https://github.com/ROCKNIX/distribution/blob/ef264a238d5e2ba960145e3fda663dc27de49a80/projects/ROCKNIX/devices/SM8750/patches/linux/0052-pmdomain-qcom-rpmhpd-presync-floor-gmu-rails.patch
@@ -356,11 +367,11 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0901-power-supply-qcom-battmgr-fix-charge-unit.patch`
   source: https://lkml.iu.edu/2608.3/10893.html
   upstream: https://lkml.iu.edu/2608.3/10893.html
-  notes: Carries the upstream SM8350-class fix that initializes the charge unit to mAh so CHARGE_FULL* is available to userspace.
+  notes: Carries the upstream SM8350-class fix that initializes the charge unit to mAh so CHARGE_FULL* is available to userspace. Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0902-power-supply-qcom-battmgr-expose-charge-now.patch`
   source: https://lkml.iu.edu/2608.3/10890.html
   upstream: https://lkml.iu.edu/2608.3/10890.html
-  notes: Carries the upstream SM8350/SM8550 mapping of the firmware remaining-charge counter to CHARGE_NOW.
+  notes: Carries the upstream SM8350/SM8550 mapping of the firmware remaining-charge counter to CHARGE_NOW. Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0900-power-supply-qcom-battmgr-log-usb-adapter-type.patch`
   source: armada
   upstream: local
@@ -368,19 +379,23 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0001-pcie-update-sm8650-dtsi.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8650/patches/linux/0001-pcie-update-sm8650-dtsi.patch
   upstream: https://lore.kernel.org/r/20260611-wake-v2-35-2744251b1181@oss.qualcomm.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0006-add-hw_params-callback-function-to-drm_connector_hdmi_audio_ops.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0006-add-hw_params-callback-function-to-drm_connector_hdmi_audio_ops.patch
   upstream: https://lore.kernel.org/r/20250925040530.20731-1-liujianfeng1994@gmail.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0007-ASoC-qcom-audioreach-compute-active-channel-maps.patch`
   source: https://lore.kernel.org/r/20260728-topic-sm8650-ayaneo-pocket-s2-wsa2-fix-v3-1-b29f44720178@linaro.org
   upstream: https://lore.kernel.org/r/178550094533.136247.8108653420741029312.b4-ty@b4
+  notes: Matches the accepted commit c663014e452d exactly. In 7.3: drop when BASE.env moves to 7.3.
 - `patches/0008-ASoC-dt-bindings-qcom-sm8250-Add-Ayaneo-Pocket-S2.patch`
   source: https://lore.kernel.org/r/20260728-topic-sm8650-ayaneo-pocket-s2-wsa2-fix-v3-2-b29f44720178@linaro.org
   upstream: https://lore.kernel.org/r/178550094533.136247.8108653420741029312.b4-ty@b4
+  notes: Matches the accepted commit b7b0a445ace2 exactly. In 7.3: drop when BASE.env moves to 7.3.
 - `patches/0009-ASoC-qcom-sc8280xp-add-Ayaneo-Pocket-S2-card.patch`
   source: https://lore.kernel.org/r/20260728-topic-sm8650-ayaneo-pocket-s2-wsa2-fix-v3-3-b29f44720178@linaro.org
   upstream: https://lore.kernel.org/r/178550094533.136247.8108653420741029312.b4-ty@b4
-  notes: Backported to Armada's Linux 7.2 machine-driver layout; the accepted WSA2 channel map and constraints are unchanged.
+  notes: Backported to Armada's Linux 7.2 machine-driver layout; the accepted WSA2 channel map and constraints are unchanged. Accepted as 968d38918ae8, in 7.3, on top of the machine-driver refactor that 7.2 does not have: drop the backport when BASE.env moves to 7.3.
 - `patches/0010-ASoC-qcom-add-KONKR-Pocket-FIT-WSA2-card.patch`
   source: armada
   upstream: local
@@ -392,6 +407,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/v2_20260420_neil_armstrong_arm64_qcom_sm8650_misc_enhancements.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8650/patches/linux/v2_20260420_neil_armstrong_arm64_qcom_sm8650_misc_enhancements.patch
   upstream: https://lore.kernel.org/r/20260615-topic-sm8650-upstream-cpu-props-v3-0-eeb6e9fa7581@linaro.org
+  notes: Matches the accepted series (bb016ddb9061 and siblings) exactly. In 7.3: drop when BASE.env moves to 7.3.
 - `patches/0063-gpu-drm-panel-add-pocket-fit-panel.patch`
   source: https://github.com/ROCKNIX/distribution/blob/5cff2f7918ca6bd56d8a884f0837309529a058bc/projects/ROCKNIX/devices/SM8750/patches/linux/0055-gpu-drm-panel-add-pocket-fit-panel.patch
   upstream: unknown
@@ -462,15 +478,19 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0026-dt-bindings-arm-qcom-ids-Add-SoC-ID-for-CQ8725S.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0026-dt-bindings-arm-qcom-ids-Add-SoC-ID-for-CQ8725S.patch
   upstream: https://lore.kernel.org/r/20260605-cq8725s-soc-id-v1-1-bb1ef93de649@gmail.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0027-soc-qcom-socinfo-Add-CQ8725S-SoC-ID.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0027-soc-qcom-socinfo-Add-CQ8725S-SoC-ID.patch
   upstream: https://lore.kernel.org/r/20260605-cq8725s-soc-id-v1-2-bb1ef93de649@gmail.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0034-arm64-dts-qcom-sm8750-Add-UART15.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0034-arm64-dts-qcom-sm8750-Add-UART15.patch
   upstream: https://lore.kernel.org/r/20260605-sm8750-uart15-v1-1-93e660722e61@gmail.com
+  notes: Matches the accepted commit 50c0854e2703 exactly. In 7.3: drop when BASE.env moves to 7.3.
 - `patches/0033-arm64-dts-qcom-sm8750-gpu-clock-controllers.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0033-arm64-dts-qcom-sm8750-gpu-clock-controllers.patch
   upstream: https://lore.kernel.org/r/20260714-gpucc_dt_v6-v6-1-16bf5289572d@oss.qualcomm.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0038-arm64-dts-qcom-sm8750-add-GPU-nodes.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0038-arm64-dts-qcom-sm8750-add-GPU-nodes.patch
   upstream: unknown
@@ -491,6 +511,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0050-clk-qcom-gxclkctl-kaanapali-fix-gx-gdsc-collapse.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0050-clk-qcom-gxclkctl-kaanapali-fix-gx-gdsc-collapse.patch
   upstream: https://lore.kernel.org/r/20260427-gfx-clk-fixes-v2-2-797e54b3d464@oss.qualcomm.com
+  notes: Matches the accepted commit badf361c00c8 exactly. In 7.3: drop when BASE.env moves to 7.3.
 - `patches/0039-wifi-ath12k-add-initial-hardware-definition-for-WCN7.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0039-wifi-ath12k-add-initial-hardware-definition-for-WCN7.patch
   upstream: unknown
@@ -510,6 +531,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0044-clk-qcom-gcc-sm8750-Do-not-turn-off-PCIe-GDSCs-durin.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0044-clk-qcom-gcc-sm8750-Do-not-turn-off-PCIe-GDSCs-durin.patch
   upstream: https://lore.kernel.org/r/20260102-pci_gdsc_fix-v1-3-b17ed3d175bc@oss.qualcomm.com
+  notes: Not in mainline as of v7.3-rc3 (checked 2026-09-18); still carried.
 - `patches/0045-Bluetooth-qca-add-WCN7860-support.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0045-Bluetooth-qca-add-WCN7860-support.patch
   upstream: unknown
