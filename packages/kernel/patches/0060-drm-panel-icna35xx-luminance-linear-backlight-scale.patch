@@ -16,9 +16,11 @@ Odin 3, white-screen panel power at DBV 4095 is 73% above DBV 3413. The
 sysfs range stays 0..4096, so userspace is unaffected.
 
 ---
+diff --git a/drivers/gpu/drm/panel/panel-chipone-icna35xx.c b/drivers/gpu/drm/panel/panel-chipone-icna35xx.c
+index 0265e4f0a..300acf70f 100644
 --- a/drivers/gpu/drm/panel/panel-chipone-icna35xx.c
 +++ b/drivers/gpu/drm/panel/panel-chipone-icna35xx.c
-@@ -33,6 +33,7 @@
+@@ -34,6 +34,7 @@ struct panel_info {
  	struct gpio_desc *reset_gpio;
  	struct regulator_bulk_data *supplies;
  	struct backlight_device *backlight;
@@ -26,7 +28,7 @@ sysfs range stays 0..4096, so userspace is unaffected.
  	bool enabled;
  };
  
-@@ -49,6 +50,10 @@
+@@ -50,6 +51,10 @@ struct panel_desc {
  	unsigned int num_modes;
  	int (*init_sequence)(struct panel_info *pinfo);
  
@@ -37,8 +39,8 @@ sysfs range stays 0..4096, so userspace is unaffected.
  	struct drm_dsc_config dsc;
  };
  
-@@ -87,11 +92,39 @@
- 	return 0;
+@@ -66,6 +71,33 @@ static inline struct panel_info *to_panel_info(struct drm_panel *panel)
+ 	return container_of(panel, struct panel_info, panel);
  }
  
 +/*
@@ -68,29 +70,34 @@ sysfs range stays 0..4096, so userspace is unaffected.
 +	3413
 +};
 +
- static int icna3512_init_sequence(struct panel_info *pinfo)
+ static int icna35xx_get_current_mode(struct panel_info *pinfo)
+ {
+ 	struct drm_connector *connector = pinfo->connector;
+@@ -92,8 +124,8 @@ static int icna3512_init_sequence(struct panel_info *pinfo)
  {
  	struct mipi_dsi_multi_context dsi_ctx = { .dsi = pinfo->dsi };
  	struct drm_dsc_picture_parameter_set pps;
--	u16 brightness = pinfo->backlight ? pinfo->backlight->props.brightness : 0;
+-	u16 brightness = pinfo->backlight ?
+-				 pinfo->backlight->props.brightness : 0;
 +	u16 cached = pinfo->backlight ? pinfo->backlight->props.brightness : 0;
 +	u16 brightness = drm_panel_bl_levels_map(&pinfo->bl_levels, cached);
  	u8 bl_payload[] = { 0x51, brightness >> 8, brightness & 0xff };
  
  	int cur_mode = icna35xx_get_current_mode(pinfo);
-@@ -160,7 +193,8 @@
+@@ -163,8 +195,8 @@ static int icna3520_init_sequence(struct panel_info *pinfo)
  {
  	struct mipi_dsi_multi_context dsi_ctx = { .dsi = pinfo->dsi };
  	struct drm_dsc_picture_parameter_set pps;
--	u16 brightness = pinfo->backlight ? pinfo->backlight->props.brightness : 0;
+-	u16 brightness = pinfo->backlight ?
+-				 pinfo->backlight->props.brightness : 0;
 +	u16 cached = pinfo->backlight ? pinfo->backlight->props.brightness : 0;
 +	u16 brightness = drm_panel_bl_levels_map(&pinfo->bl_levels, cached);
  	u8 bl_payload[] = { 0x51, brightness >> 8, brightness & 0xff };
  
  	int cur_mode = icna35xx_get_current_mode(pinfo);
-@@ -277,6 +311,9 @@
- 	.format = MIPI_DSI_FMT_RGB888,
- 	.mode_flags = MIPI_DSI_MODE_NO_EOT_PACKET | MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM,
+@@ -283,6 +315,9 @@ static struct panel_desc odin2portal_desc = {
+ 	.mode_flags = MIPI_DSI_MODE_NO_EOT_PACKET | MIPI_DSI_CLOCK_NON_CONTINUOUS |
+ 			MIPI_DSI_MODE_LPM,
  	.init_sequence = icna3512_init_sequence,
 +	.bl_levels = icna35xx_bl_levels,
 +	.num_bl_levels = ARRAY_SIZE(icna35xx_bl_levels),
@@ -98,9 +105,9 @@ sysfs range stays 0..4096, so userspace is unaffected.
  	.dsc = {
  		.dsc_version_major = 0x1,
  		.dsc_version_minor = 0x1,
-@@ -299,6 +336,9 @@
- 	.format = MIPI_DSI_FMT_RGB888,
- 	.mode_flags =  MIPI_DSI_MODE_NO_EOT_PACKET | MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM,
+@@ -306,6 +341,9 @@ static struct panel_desc thor_top_desc = {
+ 	.mode_flags =  MIPI_DSI_MODE_NO_EOT_PACKET | MIPI_DSI_CLOCK_NON_CONTINUOUS |
+ 			MIPI_DSI_MODE_LPM,
  	.init_sequence = icna3520_init_sequence,
 +	.bl_levels = icna35xx_bl_levels,
 +	.num_bl_levels = ARRAY_SIZE(icna35xx_bl_levels),
@@ -108,7 +115,7 @@ sysfs range stays 0..4096, so userspace is unaffected.
  	.dsc = {
  		.dsc_version_major = 0x1,
  		.dsc_version_minor = 0x1,
-@@ -445,7 +485,8 @@
+@@ -440,7 +478,8 @@ static int icna35xx_bl_update_status(struct backlight_device *bl)
  {
  	struct mipi_dsi_device *dsi = bl_get_data(bl);
  	struct panel_info *pinfo = mipi_dsi_get_drvdata(dsi);
@@ -118,7 +125,7 @@ sysfs range stays 0..4096, so userspace is unaffected.
  	int ret;
  
  	/*
-@@ -486,6 +527,7 @@
+@@ -491,6 +530,7 @@ static struct backlight_device *icna35xx_create_backlight(struct mipi_dsi_device
  		.type = BACKLIGHT_RAW,
  		.brightness = 4096,
  		.max_brightness = 4096,
@@ -126,7 +133,7 @@ sysfs range stays 0..4096, so userspace is unaffected.
  	};
  
  	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
-@@ -529,6 +571,13 @@
+@@ -533,6 +573,13 @@ static int icna35xx_probe(struct mipi_dsi_device *dsi)
  
  	pinfo->panel.prepare_prev_first = true;
  
@@ -137,6 +144,6 @@ sysfs range stays 0..4096, so userspace is unaffected.
 +	if (ret)
 +		return dev_err_probe(dev, ret, "Failed to build backlight levels\n");
 +
-     pinfo->backlight = icna35xx_create_backlight(dsi);
+ 	pinfo->backlight = icna35xx_create_backlight(dsi);
  	if (IS_ERR(pinfo->backlight))
  		return dev_err_probe(dev, PTR_ERR(pinfo->backlight),

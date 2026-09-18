@@ -30,7 +30,7 @@ Subject: [PATCH] arm64: dts: qcom: thor: hall wake, touch orientation, DPU dithe
  	};
 @@ -167,6 +171,9 @@
  &display_panel {
- 	compatible = "chipone,icna3520";
+ 	compatible = "ayntec,thor-panel-top", "chipone,icna3520";
  
 +	/* 8bpc DSI link; dither the DPU 10-bit downconvert to hide banding */
 +	armada,dpu-8bpc-dither;

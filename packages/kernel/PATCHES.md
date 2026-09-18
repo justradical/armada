@@ -43,10 +43,18 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8250/patches/linux/0016-rp5-smooth-brightness-adjustment.patch
   upstream: unknown
   notes: Armada limited the ROCKNIX brightness change to SM8250 panels. A [related upstream proposal](https://lore.kernel.org/r/20260706180753.408753-1-kavansmith82@gmail.com) uses a different implementation.
+- `patches/0028-dt-bindings-display-panel-chipone-icna3512.patch`
+  source: https://git.kernel.org/linus/392313ce84a8
+  upstream: https://lore.kernel.org/r/20260607-icna35xx-v4-1-64de514add34@gmail.com
+  notes: The accepted commit, verbatim. Landed after 7.2, so it is still carried here.
 - `patches/0028-drm-panel-Add-panel-driver-for-Chipone-ICNA35XX-base.patch`
-  source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0028-drm-panel-Add-panel-driver-for-Chipone-ICNA35XX-base.patch
+  source: https://git.kernel.org/linus/f747473a838e
   upstream: https://lore.kernel.org/r/20260607-icna35xx-v4-2-64de514add34@gmail.com
-  notes: The carried implementation differs from the linked upstream submission and is ported to Linux 7.2's managed DRM panel allocator.
+  notes: The accepted commit; only the Kconfig and Makefile hunks carry Armada's context. Landed after 7.2, so it is still carried here.
+- `patches/0028a-drm-panel-icna35xx-armada-boards-and-modes.patch`
+  source: armada
+  upstream: local
+  notes: Armada's delta on the accepted driver and binding. Adds the AYANEO Pocket EVO and AYN Thor Lite, which upstream does not describe; restores the 120/60 Hz mode pairs and their per-mode register sequences in place of upstream's single fixed mode per panel (upstream runs the Pocket DS top and Odin 2 Portal at 165 Hz, which Armada has not tested); re-applies brightness from the init sequence, gates brightness writes on the panel being enabled and returns the cached level rather than reading it back over DSI. Boards now name the panel with a board compatible plus the DDIC fallback, as the accepted binding requires, so dts/ carries the matching change.
 - `patches/0051-gpu-panel-add-Pocket-ACE-panel-driver.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0051-gpu-panel-add-Pocket-ACE-panel-driver.patch
   upstream: unknown
