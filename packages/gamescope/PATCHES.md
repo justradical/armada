@@ -6,6 +6,8 @@ to a commit, or `armada` if it's original; a URL source with no `notes` is verba
 
 - `patches/0001-steamcompmgr-fix-gamepad-cursor-sprite-frozen-via-XTest.patch`
   source: https://github.com/ROCKNIX/distribution/blob/e108ad2b8971b4e332d7457b75dd21dadb666d19/projects/ROCKNIX/packages/apps/gamescope/patches/0006-steamcompmgr-fix-gamepad-cursor-sprite-frozen-via-XTest.patch
+  notes: refreshed for 3.16.29-ogc1, which moved the constrained cursor branches
+  the hunk replaced; the XTest query and its position update are unchanged.
 - `patches/0002-steamcompmgr-fallback-appid-focus.patch`
   source: armada
 - `patches/0003-drm-synthesize-edid-for-edidless-internal-panels.patch`
