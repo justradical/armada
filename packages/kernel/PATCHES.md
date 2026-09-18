@@ -105,14 +105,18 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0058_AYN-Odin2-Mini--backlight.patch
   upstream: unknown
   notes: Armada refreshed only the Makefile context for Linux 7.1's backlight object list; driver behavior is unchanged.
-- `patches/0060-backlight-Add-SY7758-LED-driver.patch`
-  source: https://patchwork.kernel.org/project/dri-devel/patch/20260529-topic-sm8650-ayaneo-pocket-s2-sy7758-v5-2-03aacd49747c@linaro.org/
-  upstream: https://lore.kernel.org/r/178300990349.2239788.13080024963462152507.b4-ty@b4
-  notes: Armada made the enable GPIO optional (`devm_gpiod_get_optional`). The AYANEO Pocket DS wires no discrete enable line to its SY7758, and requiring one left the whole lower DSI chain deferred; boards that do have one are unaffected. The binding patch carries the matching change.
 - `patches/0060-dt-bindings-silergy-sy7758.patch`
-  source: https://patchwork.kernel.org/project/dri-devel/patch/20260529-topic-sm8650-ayaneo-pocket-s2-sy7758-v5-1-03aacd49747c@linaro.org/
+  source: https://git.kernel.org/linus/2019a2a7268f
   upstream: https://lore.kernel.org/r/178300990349.2239788.13080024963462152507.b4-ty@b4
-  notes: Armada dropped `enable-gpios` from the required list to match the driver change above; the AYANEO Pocket DS reaches its SY7758 without a separately described enable pin.
+  notes: The accepted commit, verbatim. Landed after 7.2, so it is still carried here.
+- `patches/0060-backlight-Add-SY7758-LED-driver.patch`
+  source: https://git.kernel.org/linus/110d67699a43
+  upstream: https://lore.kernel.org/r/178300990349.2239788.13080024963462152507.b4-ty@b4
+  notes: The accepted commit, verbatim. Landed after 7.2, so it is still carried here.
+- `patches/0061-backlight-sy7758-make-enable-gpio-optional.patch`
+  source: armada
+  upstream: local
+  notes: Armada's only delta from the accepted SY7758 driver and binding: the enable GPIO is optional (`devm_gpiod_get_optional`) and dropped from the binding's required list. The AYANEO Pocket DS wires no discrete enable line to its SY7758, and requiring one left the whole lower DSI chain deferred; boards that do have one are unaffected.
 - `patches/0054-regulator-add-sgm3804-i2c-regulator-for-panel-power-.patch`
   source: armada
   upstream: local

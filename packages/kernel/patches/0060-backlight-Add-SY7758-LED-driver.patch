@@ -1,9 +1,8 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Fri, 29 May 2026 21:23:09 +0200
-Subject: [PATCH v5 2/2] backlight: Add SY7758 6-channel High Efficiency LED Driver support
-
+From 110d67699a430daf0316f941254c46221e3f0914 Mon Sep 17 00:00:00 2001
 From: KancyJoe <kancy2333@outlook.com>
+Date: Fri, 29 May 2026 21:23:09 +0200
+Subject: [PATCH] backlight: Add SY7758 6-channel High Efficiency LED Driver
+ support
 
 Implement support for the Silergy SY7758 6-channel High Efficiency LED
 Driver used for backlight brightness control in the Ayaneo Pocket S2
@@ -12,14 +11,17 @@ dual-DSI panel.
 Signed-off-by: KancyJoe <kancy2333@outlook.com>
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
+Link: https://patch.msgid.link/20260529-topic-sm8650-ayaneo-pocket-s2-sy7758-v5-2-03aacd49747c@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 ---
- drivers/video/backlight/Kconfig  |   8 ++
+ drivers/video/backlight/Kconfig  |   8 +
  drivers/video/backlight/Makefile |   1 +
- drivers/video/backlight/sy7758.c | 262 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 271 insertions(+)
+ drivers/video/backlight/sy7758.c | 259 +++++++++++++++++++++++++++++++
+ 3 files changed, 268 insertions(+)
+ create mode 100644 drivers/video/backlight/sy7758.c
 
 diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-index a7a3fbaf7c29..a1f70a2bae99 100644
+index 7aa1c4b21111..7c66b8840d88 100644
 --- a/drivers/video/backlight/Kconfig
 +++ b/drivers/video/backlight/Kconfig
 @@ -207,6 +207,14 @@ config BACKLIGHT_KTZ8866
@@ -38,10 +40,10 @@ index a7a3fbaf7c29..a1f70a2bae99 100644
  	tristate "Backlight Driver for LM3533"
  	depends on MFD_LM3533
 diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-index 794820a98ed4..39ef588b1cf2 100644
+index 21c8313cfb12..34469711c6cd 100644
 --- a/drivers/video/backlight/Makefile
 +++ b/drivers/video/backlight/Makefile
-@@ -56,6 +56,7 @@ obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
+@@ -57,6 +57,7 @@ obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
  obj-$(CONFIG_BACKLIGHT_QCOM_WLED)	+= qcom-wled.o
  obj-$(CONFIG_BACKLIGHT_RT4831)		+= rt4831-backlight.o
  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
@@ -54,7 +56,7 @@ new file mode 100644
 index 000000000000..786589cb8df9
 --- /dev/null
 +++ b/drivers/video/backlight/sy7758.c
-@@ -0,0 +1,262 @@
+@@ -0,0 +1,259 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Silergy SY7758 6-channel High Efficiency LED Driver
@@ -241,11 +243,8 @@ index 000000000000..786589cb8df9
 +
 +	fsleep(100);
 +
-+	/*
-+	 * Some boards route SY7758 EN through a dedicated GPIO, while Pocket DS
-+	 * leaves the chip reachable without a separately-described enable pin.
-+	 */
-+	sydev->gpio = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_HIGH);
++	/* Get enable GPIO and set to high */
++	sydev->gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_HIGH);
 +	if (IS_ERR(sydev->gpio))
 +		return dev_err_probe(dev, PTR_ERR(sydev->gpio),
 +				     "failed to get enable GPIO\n");

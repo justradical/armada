@@ -1,24 +1,28 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 2019a2a7268f6f7387f052110558b9f90b500324 Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Date: Fri, 29 May 2026 21:23:08 +0200
-Subject: [PATCH v5 1/2] dt-bindings: leds: backlight: document the SY7758 6-channel High Efficiency LED Driver
+Subject: [PATCH] dt-bindings: leds: backlight: Document the SY7758 6-channel
+ High Efficiency LED Driver
 
 Document the Silergy SY7758 6-channel High Efficiency LED Driver
 used for backlight brightness control.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
+Link: https://patch.msgid.link/20260529-topic-sm8650-ayaneo-pocket-s2-sy7758-v5-1-03aacd49747c@linaro.org
+Signed-off-by: Lee Jones <lee@kernel.org>
 ---
- .../bindings/leds/backlight/silergy,sy7758.yaml    | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ .../leds/backlight/silergy,sy7758.yaml        | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/silergy,sy7758.yaml
 
 diff --git a/Documentation/devicetree/bindings/leds/backlight/silergy,sy7758.yaml b/Documentation/devicetree/bindings/leds/backlight/silergy,sy7758.yaml
 new file mode 100644
 index 000000000000..64af6b34641a
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/leds/backlight/silergy,sy7758.yaml
-@@ -0,0 +1,51 @@
+@@ -0,0 +1,52 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
@@ -52,6 +56,7 @@ index 000000000000..64af6b34641a
 +required:
 +  - compatible
 +  - reg
++  - enable-gpios
 +
 +unevaluatedProperties: false
 +

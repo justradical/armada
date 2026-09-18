@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Armada <armada@armada-os.org>
+Date: Thu, 18 Sep 2026 00:00:00 +0000
+Subject: [PATCH] backlight: sy7758: make the enable GPIO optional
+
+The AYANEO Pocket DS wires no discrete enable line to its SY7758, and the
+accepted driver requires one, which left the whole lower DSI chain in
+probe deferral. Make the GPIO optional in the driver and drop it from the
+binding's required list; boards that do describe one are unaffected.
+
+Armada-only delta on top of the accepted upstream driver and binding.
+---
+diff --git a/Documentation/devicetree/bindings/leds/backlight/silergy,sy7758.yaml b/Documentation/devicetree/bindings/leds/backlight/silergy,sy7758.yaml
+index 64af6b346..bf1d9c2b8 100644
+--- a/Documentation/devicetree/bindings/leds/backlight/silergy,sy7758.yaml
++++ b/Documentation/devicetree/bindings/leds/backlight/silergy,sy7758.yaml
+@@ -31,7 +31,6 @@ properties:
+ required:
+   - compatible
+   - reg
+-  - enable-gpios
+ 
+ unevaluatedProperties: false
+ 
+diff --git a/drivers/video/backlight/sy7758.c b/drivers/video/backlight/sy7758.c
+index 786589cb8..a36019a92 100644
+--- a/drivers/video/backlight/sy7758.c
++++ b/drivers/video/backlight/sy7758.c
+@@ -184,8 +184,11 @@ static int sy7758_probe(struct i2c_client *client)
+ 
+ 	fsleep(100);
+ 
+-	/* Get enable GPIO and set to high */
+-	sydev->gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_HIGH);
++	/*
++	 * Some boards route SY7758 EN through a dedicated GPIO, while Pocket DS
++	 * leaves the chip reachable without a separately-described enable pin.
++	 */
++	sydev->gpio = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(sydev->gpio))
+ 		return dev_err_probe(dev, PTR_ERR(sydev->gpio),
+ 				     "failed to get enable GPIO\n");
