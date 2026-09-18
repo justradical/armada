@@ -87,10 +87,14 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0106-drm-panel-il97680a-luminance-linear-backlight-scale.patch`
   source: armada
   upstream: not submitted
+- `patches/0062-dt-bindings-display-panel-renesas-r63419.patch`
+  source: https://git.kernel.org/linus/9c04ecc893f0
+  upstream: https://lore.kernel.org/r/20260625-topic-sm8650-ayaneo-pocket-s2-r63419-v8-1-8570e692143e@linaro.org
+  notes: The accepted commit, verbatim. In 7.3: drop when BASE.env moves to 7.3.
 - `patches/0062-gpu-drm-panel-add-wt0630-panel.patch`
-  source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0062-gpu-drm-panel-add-wt0630-panel.patch
+  source: https://git.kernel.org/linus/1190fc8d7b8a
   upstream: https://lore.kernel.org/r/20260625-topic-sm8650-ayaneo-pocket-s2-r63419-v8-2-8570e692143e@linaro.org
-  notes: Ported to Linux 7.2's managed DRM panel allocator.
+  notes: The accepted driver for the same WT0600/WT0630 panels, replacing the ROCKNIX `panel-wt0600-2k.c` Armada used to carry; the compatibles are unchanged, so only the supply names move. It takes vdd/vddio first and then vsp/vsn/vci with the datasheet delays, where the ROCKNIX driver enabled one bulk of vddio/vci/vdd/avdd, so dts/ now points vsp and vsn at the board's SGM3804 in place of avdd, and the config fragment selects DRM_PANEL_RENESAS_R63419 in place of DRM_PANEL_AYANEO_WT0600_2K. UNTESTED ON HARDWARE: the panel power-on sequence and the DCS sleep-out/display-on delays differ from the driver Armada shipped, so the AYANEO Pocket S2 and Pocket S 2K need a display bring-up check before this ships. In 7.3: drop when BASE.env moves to 7.3.
 - `patches/0063-gpu-drm-panel-add-wt0600-1k-panel.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0063-gpu-drm-panel-add-wt0600-1k-panel.patch
   notes: Standalone single-DSI driver for the 1080x1920 60Hz WT0600 panel (Pocket S 1K) from ROCKNIX PR #3007.

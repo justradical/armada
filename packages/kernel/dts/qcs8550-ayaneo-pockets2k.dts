@@ -150,9 +150,10 @@
 
 &display_panel {
 	status = "okay";
-	compatible = "ayaneo,wt0600-2k";
+	compatible = "ayaneo,wt0600-2k", "renesas,r63419";
 
-	avdd-supply = <&sgm3804>;
+	vsp-supply = <&sgm3804>;
+	vsn-supply = <&sgm3804>;
 
 	reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
 	backlight = <&backlight>;

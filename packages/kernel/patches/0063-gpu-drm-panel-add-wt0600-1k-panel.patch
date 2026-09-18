@@ -15,12 +15,12 @@ Signed-off-by: ROCKNIX <dev@rocknix.org>
  create mode 100644 drivers/gpu/drm/panel/panel-wt0600-1k.c
 
 diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 1bfb393afc57..2bfb393afc58 100644
+index b86c00196..e3f93bbc3 100644
 --- a/drivers/gpu/drm/panel/Kconfig
 +++ b/drivers/gpu/drm/panel/Kconfig
-@@ -1135,6 +1135,18 @@ config DRM_PANEL_AYANEO_WT0600_2K
- 
- 	  To compile this driver as a module, choose M here.
+@@ -1413,6 +1413,18 @@ config DRM_PANEL_WIDECHIPS_WS2401
+ 	  480x800 display controller used in panels such as Samsung LMS380KF01.
+ 	  This display is used in the Samsung Galaxy Ace 2 GT-I8160 (Codina).
  
 +config DRM_PANEL_AYANEO_WT0600_1K
 +	tristate "Ayaneo WT0600 1K single-DSI video mode panel"
@@ -38,18 +38,20 @@ index 1bfb393afc57..2bfb393afc58 100644
  	tristate "Xinpeng XPP055C272 panel driver"
  	depends on OF
 diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 45dddcc85b65..55dddcc85b66 100644
+index 4452895ff..78ec8c632 100644
 --- a/drivers/gpu/drm/panel/Makefile
 +++ b/drivers/gpu/drm/panel/Makefile
-@@ -114,4 +114,5 @@ obj-$(CONFIG_DRM_PANEL_VISIONOX_VTDR6130) += panel-visionox-vtdr6130.o
- obj-$(CONFIG_DRM_PANEL_VISIONOX_R66451) += panel-visionox-r66451.o
- obj-$(CONFIG_DRM_PANEL_WIDECHIPS_WS2401) += panel-widechips-ws2401.o
- obj-$(CONFIG_DRM_PANEL_AYANEO_WT0600_2K) += panel-wt0600-2k.o
+@@ -114,6 +114,7 @@ obj-$(CONFIG_DRM_PANEL_SHARP_LQ079L1SX01) += panel-sharp-lq079l1sx01.o
+ obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
+ obj-$(CONFIG_DRM_PANEL_SHARP_LS037V7DW01) += panel-sharp-ls037v7dw01.o
+ obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) += panel-sharp-ls043t1le01.o
 +obj-$(CONFIG_DRM_PANEL_AYANEO_WT0600_1K) += panel-wt0600-1k.o
- obj-$(CONFIG_DRM_PANEL_XINPENG_XPP055C272) += panel-xinpeng-xpp055c272.o
+ obj-$(CONFIG_DRM_PANEL_SHARP_LS060T1SX01) += panel-sharp-ls060t1sx01.o
+ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7701) += panel-sitronix-st7701.o
+ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7703) += panel-sitronix-st7703.o
 diff --git a/drivers/gpu/drm/panel/panel-wt0600-1k.c b/drivers/gpu/drm/panel/panel-wt0600-1k.c
 new file mode 100644
-index 0000000..fbf3446
+index 000000000..74f8d2a39
 --- /dev/null
 +++ b/drivers/gpu/drm/panel/panel-wt0600-1k.c
 @@ -0,0 +1,267 @@
@@ -320,7 +322,3 @@ index 0000000..fbf3446
 +	},
 +};
 +module_mipi_dsi_driver(wt0600_1k_driver);
-+
-+MODULE_AUTHOR("ROCKNIX <dev@rocknix.org>");
-+MODULE_DESCRIPTION("DRM driver for wt0600 1080p single-dsi video mode panel");
-+MODULE_LICENSE("GPL");
