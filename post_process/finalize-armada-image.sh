@@ -43,7 +43,7 @@ sudo mkdir -p "${WORK}/mnt/rocknix_abl"
 # vfat has no Unix ownership, so `cp -a` would error on chown under set -e.
 ABL_SRC=$(ls -d "${WORK}/abl-extracted"/rocknix-abl-*)
 sudo cp "${REPO_ROOT}/abl/README" "${WORK}/mnt/rocknix_abl/README"
-for soc in SM8250 SM8550 SM8650 SM8750; do
+for soc in SM4450 SM8250 SM8550 SM8650 SM8750; do
     approved=$(ARMADA_ABL_RELEASES="${ABL_RELEASES}" \
         python3 "${ABL_CATALOG_TOOL}" --lookup "${ARMADA_ABL_VERSION}" "${soc}") || {
         echo "ERROR: missing approved ${ARMADA_ABL_VERSION} ${soc} payload" >&2

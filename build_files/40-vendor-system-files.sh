@@ -43,7 +43,7 @@ install -Dpm 0644 /dev/null "${manifest}"
 install -Dpm 0644 "${abl_releases}" /usr/lib/armada/abl/releases.tsv
 printf 'ARMADA_ABL_VERSION=%s\nARMADA_ABL_AUTO=%s\n' \
     "${ARMADA_ABL_VERSION}" "${ARMADA_ABL_AUTO}" >> "${manifest}"
-for soc in SM8250 SM8550 SM8650 SM8750; do
+for soc in SM4450 SM8250 SM8550 SM8650 SM8750; do
     approved=$(ARMADA_ABL_RELEASES="${abl_releases}" \
         python3 /usr/lib/armada/abl-version --lookup "${ARMADA_ABL_VERSION}" "${soc}") || {
         echo "ERROR: missing approved ${ARMADA_ABL_VERSION} ${soc} payload" >&2

@@ -40,7 +40,7 @@ fi
 [ -n "${device_id}" ] && [ "${device_id}" != unknown ] || {
     echo "armada-abl-update: device is not recognized by Armada" >&2; exit 7;
 }
-case "${soc}" in SM8250|SM8550|SM8650|SM8750) ;; *)
+case "${soc}" in SM4450|SM8250|SM8550|SM8650|SM8750) ;; *)
     echo "armada-abl-update: unsupported SoC '${soc:-unknown}'" >&2; exit 7 ;;
 esac
 
