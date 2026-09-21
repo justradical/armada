@@ -26,6 +26,26 @@ TWEAKS_DEFAULTS_FIXTURE="$ROOT/system_files/usr/share/armada/game-tweaks.json"
 TWEAKS_HELPER="$ROOT/system_files/usr/libexec/armada/armada-game-tweaks"
 SESSION_FILE="$ROOT/system_files/usr/share/gamescope-session-plus/sessions.d/steam"
 SESSION_REALTIME_BLOCK="$(sed -n '/^_armada_game_tweaks=/,/^unset _armada_game_tweaks/p' "$SESSION_FILE")"
+SESSION_TURNIP_BLOCK="$(sed -n '/^if \[\[.*ARMADA_DEVICE_ID.*anbernic-rg55g1/,/^fi$/p' "$SESSION_FILE")"
+
+session_turnip_debug() {
+    env -u TU_DEBUG ARMADA_DEVICE_ID="$1" \
+        bash -c "$SESSION_TURNIP_BLOCK"$'\n''printf "%s" "${TU_DEBUG:-}"'
+}
+
+[[ "$(session_turnip_debug anbernic-rg55g1)" == noconform ]] || {
+    printf 'FAIL: RG55G1 session did not enable Turnip noconform\n' >&2
+    exit 1
+}
+[[ -z "$(session_turnip_debug ayn-odin-2)" ]] || {
+    printf 'FAIL: non-RG55G1 session enabled Turnip noconform\n' >&2
+    exit 1
+}
+[[ "$(TU_DEBUG=sync ARMADA_DEVICE_ID=anbernic-rg55g1 \
+    bash -c "$SESSION_TURNIP_BLOCK"$'\n''printf "%s" "$TU_DEBUG"')" == sync,noconform ]] || {
+    printf 'FAIL: RG55G1 session did not preserve existing TU_DEBUG flags\n' >&2
+    exit 1
+}
 
 session_realtime_value() {
     env -u GAMESCOPE_FORCE_VULKAN_REALTIME ARMADA_TWEAKS_CONFIG="$TWEAKS_FIXTURE" \
@@ -363,6 +383,7 @@ check("device-env RG55G1 profile",
       rg55g1.get("ARMADA_DEVICE_ID") == "anbernic-rg55g1" and
       rg55g1.get("ARMADA_SOC_CLASS") == "SM4450" and
       rg55g1.get("ARMADA_PANEL_ORIENTATION") == "right" and
+      rg55g1.get("ARMADA_GAMESCOPE_USE_ROTATION_SHADER") == "1" and
       rg55g1.get("ARMADA_LITTLE_CORES") == "0-5" and
       rg55g1.get("ARMADA_BIG_CORES") == "6-7" and
       rg55g1.get("ARMADA_PRIME_CORES") == "6-7" and

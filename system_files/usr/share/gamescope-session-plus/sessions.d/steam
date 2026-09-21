@@ -4,6 +4,11 @@
 
 source /usr/lib/armada/storage-lib
 
+# Adreno 613 needs Turnip's software multiview path for Gamescope.
+if [[ "${ARMADA_DEVICE_ID:-}" == "anbernic-rg55g1" ]]; then
+    export TU_DEBUG="${TU_DEBUG:+${TU_DEBUG},}noconform"
+fi
+
 function short_session_recover {
     mkdir -p ~/.local/share/Steam
     # remove some caches and stateful things known to cause Steam to fail to start if corrupt
