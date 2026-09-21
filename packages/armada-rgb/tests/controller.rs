@@ -285,6 +285,37 @@ fn air_y_pro_profile_controls_both_aw20036_rings() {
 }
 
 #[test]
+fn rg55g1_profile_controls_the_rgb_indicator() {
+    let fixture: Fixture = Fixture::new();
+    fs::write(&fixture.model, b"Anbernic RG 55G1\0").unwrap();
+    fs::write(&fixture.profiles, include_bytes!("../profiles.json")).unwrap();
+
+    for color in ["red", "green", "blue"] {
+        fixture.channel_target(&format!("{color}:indicator"), "255");
+    }
+    fixture.channel_target("power-led", "255");
+
+    let output: std::process::Output = Command::new(env!("CARGO_BIN_EXE_armada-rgb"))
+        .env("ARMADA_RGB_CONFIG_PATH", &fixture.config)
+        .env("ARMADA_RGB_SYSFS_ROOT", &fixture.leds)
+        .env("ARMADA_RGB_MODEL_PATH", &fixture.model)
+        .env("ARMADA_RGB_PROFILES_PATH", &fixture.profiles)
+        .args(["set", "--color", "FF8000", "--brightness", "25"])
+        .output()
+        .unwrap();
+
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(fixture.value("red:indicator", "brightness"), "64");
+    assert_eq!(fixture.value("green:indicator", "brightness"), "14");
+    assert_eq!(fixture.value("blue:indicator", "brightness"), "0");
+    assert_eq!(fixture.value("power-led", "brightness"), "unchanged");
+}
+
+#[test]
 fn correction_preserves_the_user_color() {
     let fixture: Fixture = Fixture::new();
     fixture.target("rgb:sticks", "red green blue", "255");
