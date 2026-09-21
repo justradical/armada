@@ -705,6 +705,10 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
   source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0009-drm-msm-add-sm4450-display.patch
   upstream: unknown
   notes: Refreshed for Armada's combined DPU catalog.
+- `patches/sm4450-0009a-drm-msm-dpu-rename-sm4450-rotation-formats.patch`
+  source: Armada corrective patch
+  upstream: unknown
+  notes: Gives the SM4450 rotation format list a unique name.
 - `patches/sm4450-0011-clk-qcom-dispcc-sm4450-fix-mdp-clk-src-ops.patch`
   source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0011-clk-qcom-dispcc-sm4450-fix-mdp-clk-src-ops.patch
   upstream: unknown

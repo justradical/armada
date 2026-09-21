@@ -1,0 +1,34 @@
+From: Armada <noreply@armada.local>
+Subject: [PATCH] drm/msm/dpu: rename SM4450 rotation formats
+
+The inline-rotation support already defines the common rotation_v201_formats
+list.  Give the SM4450-specific three-format list its own name so both
+rotation configurations can coexist.
+
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -210,7 +210,7 @@ static const u32 rotation_v201_formats[] = {
+ 	DRM_FORMAT_XBGR2101010,
+ };
+ 
+-static const u32 rotation_v201_formats[] = {
++static const u32 rotation_sm4450_formats[] = {
+ 	DRM_FORMAT_NV12,
+ 	DRM_FORMAT_ABGR8888,
+ 	DRM_FORMAT_ABGR2101010,
+@@ -353,8 +353,8 @@
+
+ static const struct dpu_rotation_cfg dpu_rot_sm4450_cfg_v201 = {
+ 	.rot_maxheight = 1200,
+-	.rot_num_formats = ARRAY_SIZE(rotation_v201_formats),
+-	.rot_format_list = rotation_v201_formats,
++	.rot_num_formats = ARRAY_SIZE(rotation_sm4450_formats),
++	.rot_format_list = rotation_sm4450_formats,
+ };
+ 
+ static const struct dpu_sspp_sub_blks dpu_vig_sblk_qseed2 =

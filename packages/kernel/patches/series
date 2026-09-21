@@ -135,6 +135,7 @@ sm4450-0005-soc-qcom-pd-mapper-add-sm4450.patch
 sm4450-0006-interconnect-qcom-add-sm4450.patch
 sm4450-0008-iommu-arm-smmu-qcom-add-sm4450.patch
 sm4450-0009-drm-msm-add-sm4450-display.patch
+sm4450-0009a-drm-msm-dpu-rename-sm4450-rotation-formats.patch
 sm4450-0011-clk-qcom-dispcc-sm4450-fix-mdp-clk-src-ops.patch
 sm4450-0012-clk-qcom-dispcc-sm4450-quiesce-splash.patch
 sm4450-0013-clk-qcom-gpucc-sm4450-add-hlos1-vote-gpu-smmu.patch
