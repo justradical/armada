@@ -523,7 +523,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0060-ASoC-qcom-sc8280xp-enable-MI2S-bit-clock-on-BE-startup.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0060-ASoC-qcom-sc8280xp-enable-MI2S-bit-clock-on-BE-startup.patch
   upstream: unknown
-  notes: Armada combined ROCKNIX's SM8750 clock-reference fix with Armada's Primary-MI2S clock handling while rebasing the shared driver onto Linux 7.1.
+  notes: Rebased after Armada's Primary and Senary MI2S support, retaining both format paths while adding ROCKNIX's shared clock refcount.
 - `patches/0072-ASoC-lpass-rx-macro-add-HPH-PCM-mode.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8750/patches/linux/0072-ASoC-lpass-rx-macro-add-HPH-PCM-mode.patch
   upstream: unknown
@@ -679,3 +679,129 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
   source: https://github.com/bylaws/linux/commit/7ae989a43ae7e3cb8007ac21c28dacc24c9d8320
   upstream: unknown
   notes: Rebased patch context for Linux 7.2.3 and Armada's compat-input patch; the unaligned-atomic handler is unchanged.
+
+- `patches/sm4450-0001-drm-msm-adreno-add-a613-catalog-entry.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0001-drm-msm-adreno-add-a613-catalog-entry.patch
+  upstream: unknown
+- `patches/sm4450-0002-pmdomain-qcom-rpmhpd-add-lcx-for-sm4450.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0002-pmdomain-qcom-rpmhpd-add-lcx-for-sm4450.patch
+  upstream: unknown
+- `patches/sm4450-0003-remoteproc-qcom-pas-add-sm4450-adsp-wpss.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0003-remoteproc-qcom-pas-add-sm4450-adsp-wpss.patch
+  upstream: unknown
+- `patches/sm4450-0004-regulator-qcom-rpmh-add-pm6450.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0004-regulator-qcom-rpmh-add-pm6450.patch
+  upstream: unknown
+- `patches/sm4450-0005-soc-qcom-pd-mapper-add-sm4450.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0005-soc-qcom-pd-mapper-add-sm4450.patch
+  upstream: unknown
+- `patches/sm4450-0006-interconnect-qcom-add-sm4450.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0006-interconnect-qcom-add-sm4450.patch
+  upstream: unknown
+- `patches/sm4450-0008-iommu-arm-smmu-qcom-add-sm4450.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0008-iommu-arm-smmu-qcom-add-sm4450.patch
+  upstream: unknown
+- `patches/sm4450-0009-drm-msm-add-sm4450-display.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0009-drm-msm-add-sm4450-display.patch
+  upstream: unknown
+  notes: Refreshed for Armada's combined DPU catalog.
+- `patches/sm4450-0011-clk-qcom-dispcc-sm4450-fix-mdp-clk-src-ops.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0011-clk-qcom-dispcc-sm4450-fix-mdp-clk-src-ops.patch
+  upstream: unknown
+  notes: Corrects a malformed source hunk header.
+- `patches/sm4450-0012-clk-qcom-dispcc-sm4450-quiesce-splash.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0012-clk-qcom-dispcc-sm4450-quiesce-splash.patch
+  upstream: unknown
+- `patches/sm4450-0013-clk-qcom-gpucc-sm4450-add-hlos1-vote-gpu-smmu.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0013-clk-qcom-gpucc-sm4450-add-hlos1-vote-gpu-smmu.patch
+  upstream: unknown
+- `patches/sm4450-0014-clk-qcom-gpucc-sm4450-enable-gx-gdsc.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0014-clk-qcom-gpucc-sm4450-enable-gx-gdsc.patch
+  upstream: unknown
+- `patches/sm4450-0015-drm-msm-a6xx-avoid-gmu-cx-reads-on-a613.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0015-drm-msm-a6xx-avoid-gmu-cx-reads-on-a613.patch
+  upstream: unknown
+- `patches/sm4450-0017-clk-qcom-gpucc-sm4450-fix-gfx3d-rcg-ops.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0017-clk-qcom-gpucc-sm4450-fix-gfx3d-rcg-ops.patch
+  upstream: unknown
+- `patches/sm4450-0018-clk-qcom-gpucc-sm4450-retain-gx-gdsc-regs.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0018-clk-qcom-gpucc-sm4450-retain-gx-gdsc-regs.patch
+  upstream: unknown
+  notes: Corrects a malformed source hunk header.
+- `patches/sm4450-0019-drm-msm-dpu-stop-boot-scanout.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0019-drm-msm-dpu-stop-boot-scanout.patch
+  upstream: unknown
+  notes: Rebased after Armada's DPU changes.
+- `patches/sm4450-0022-regulator-qcom-rpmh-add-pbs-type.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0022-regulator-qcom-rpmh-add-pbs-type.patch
+  upstream: unknown
+- `patches/sm4450-0023-leds-qcom-lpg-add-pm6450-pwm.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0023-leds-qcom-lpg-add-pm6450-pwm.patch
+  upstream: unknown
+- `patches/sm4450-0024-serial-qcom-geni-restart-terminated-rx-command.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0024-serial-qcom-geni-restart-terminated-rx-command.patch
+  upstream: unknown
+- `patches/sm4450-0030-ASoC-qcom-sc8280xp-i2s-clk-support.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0030-ASoC-qcom-sc8280xp-i2s-clk-support.patch
+  upstream: unknown
+  notes: Carries the Senary MI2S delta on top of Armada's existing Primary MI2S support.
+- `patches/sm4450-0031-ASoC-codecs-aw88166-support-changing-sample-rate-and-bit-width.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0031-ASoC-codecs-aw88166-support-changing-sample-rate-and-bit-width.patch
+  upstream: unknown
+  notes: Rebased on Armada's AW88166 changes.
+- `patches/sm4450-0032-ASoC-codecs-aw88166-reduce-log-spam.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0032-ASoC-codecs-aw88166-reduce-log-spam.patch
+  upstream: unknown
+- `patches/sm4450-0033-ASoC-codecs-aw88166-remove-fade-in-out-on-start-stop.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0033-ASoC-codecs-aw88166-remove-fade-in-out-on-start-stop.patch
+  upstream: unknown
+- `patches/sm4450-0034-ASoC-codecs-aw88166-make-volume-control-usable.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0034-ASoC-codecs-aw88166-make-volume-control-usable.patch
+  upstream: unknown
+  notes: Rebased on Armada's AW88166 changes.
+- `patches/sm4450-0039-soundwire-qcom-arm-wake-detector-for-clock-stop.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0039-soundwire-qcom-arm-wake-detector-for-clock-stop.patch
+  upstream: unknown
+- `patches/sm4450-0040-phy-qcom-qmp-combo-add-sm4450.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0040-phy-qcom-qmp-combo-add-sm4450.patch
+  upstream: unknown
+- `patches/sm4450-0042-phy-qcom-qmp-combo-prevent-pm-runtime-suspend-at-boot.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0042-phy-qcom-qmp-combo-prevent-pm-runtime-suspend-at-boot.patch
+  upstream: unknown
+- `patches/sm4450-0045-ath10k-use-soc-serial.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0045-drivers-use-soc-serial-for-wifi-and-bluetooth.patch
+  upstream: unknown
+  notes: Carries only the ath10k delta; Armada's existing patch carries the shared Bluetooth and SoC changes.
+- `patches/sm4450-0046-bluetooth-hci_qca-include-wcn3950-in-wcn-family-switches.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0046-bluetooth-hci_qca-include-wcn3950-in-wcn-family-switches.patch
+  upstream: unknown
+- `patches/sm4450-0047-bluetooth-hci_qca-drop-baudrate-vendor-event-for-wcn3950.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0047-bluetooth-hci_qca-drop-baudrate-vendor-event-for-wcn3950.patch
+  upstream: unknown
+- `patches/sm4450-0048-bluetooth-hci_qca-keep-ibs-disabled-for-wcn3950.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0048-bluetooth-hci_qca-keep-ibs-disabled-for-wcn3950.patch
+  upstream: unknown
+- `patches/sm4450-0049-usb-typec-ucsi_glink-add-sm4450-quirk.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0049-usb-typec-ucsi_glink-add-sm4450-quirk.patch
+  upstream: unknown
+- `patches/sm4450-0050-drm-panel-add-focaltech-ft7131m.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0050-drm-panel-add-focaltech-ft7131m.patch
+  upstream: unknown
+  notes: Kconfig and Kbuild context is refreshed for Armada's combined kernel.
+- `patches/sm4450-0051-power-supply-qcom_battmgr-allow-setting-the-USB-input-current-limit.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0051-power-supply-qcom_battmgr-allow-setting-the-USB-input-current-limit.patch
+  upstream: unknown
+- `patches/sm4450-0052-power-supply-qcom_battmgr-report-the-USB-adapter-type.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0052-power-supply-qcom_battmgr-report-the-USB-adapter-type.patch
+  upstream: unknown
+- `patches/sm4450-0053-input-add-singleadc-joypad.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0053-input-add-singleadc-joypad.patch
+  upstream: unknown
+  notes: Kconfig and Kbuild context is refreshed for Armada's combined kernel.
+- `patches/sm4450-0054-power-supply-rename-qcom-battmgr-sysfs.patch`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0054-power-supply-rename-qcom-battmgr-sysfs.patch
+  upstream: unknown
+  notes: Drops the SM8550 hunk already carried by Armada.
+- `dts/sm4450-anbernic-rg55g1.dts`
+  source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/linux/dts/qcom/sm4450-anbernic-rg55g1.dts
+  notes: Imported verbatim from ROCKNIX; SHA-256 `e970b25b2756b140a51738c11b97400ae13ca7f2780bac88d606db253cfc533d`.

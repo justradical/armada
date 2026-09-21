@@ -33,6 +33,9 @@ CONFIG_SM_DISPCC_8550=y
 CONFIG_SM_GPUCC_8550=y
 CONFIG_SM_VIDEOCC_8550=y
 CONFIG_SM_CAMCC_8550=y
+CONFIG_SM_DISPCC_4450=y
+CONFIG_SM_GCC_4450=y
+CONFIG_SM_GPUCC_4450=y
 
 CONFIG_PHY_QCOM_QMP_PCIE=y
 CONFIG_PHY_QCOM_QMP_USB=y
@@ -66,6 +69,7 @@ CONFIG_RESET_QCOM_PDC=y
 
 CONFIG_INTERCONNECT_QCOM_OSM_L3=y
 CONFIG_QCOM_ICC_BWMON=y
+CONFIG_INTERCONNECT_QCOM_SM4450=y
 
 CONFIG_QCOM_SPMI_ADC5=y
 CONFIG_QCOM_SPMI_ADC_TM5=y
@@ -120,6 +124,7 @@ CONFIG_DRM_PANEL_BOE_XM91080G=y             # AYN Odin 2 Mini
 CONFIG_DRM_PANEL_AYANEO_WT0600_2K=y         # AYN Thor
 CONFIG_DRM_PANEL_AYANEO_WT0600_1K=y         # AYANEO Pocket S 1K
 CONFIG_DRM_PANEL_MANGMI_AIR_Y_PRO=y         # MANGMI Air Y Pro
+CONFIG_DRM_PANEL_FOCALTECH_FT7131M=y        # Anbernic RG 55G1
 
 # ============== Input ==============
 CONFIG_INPUT_JOYSTICK=y
@@ -128,6 +133,7 @@ CONFIG_JOYSTICK_RSINPUT=m
 CONFIG_JOYSTICK_MCU=y                     # KONKR Pocket FIT Elite SPI gamepad
 CONFIG_INPUT_KONKR_SYSBTN=y               # KONKR Pocket FIT Elite system buttons
 CONFIG_JOYSTICK_MANGMI_POCKET_MAX=m       # MANGMI Pocket Max + Air Y Pro
+CONFIG_JOYSTICK_SINGLEADC_JOYPAD=m        # Anbernic RG 55G1
 
 # ============== Touchscreens ==============
 CONFIG_TOUCHSCREEN_HYNITRON_CSTXXX=m
@@ -149,6 +155,7 @@ CONFIG_INPUT_QCOM_HV_HAPTICS=m              # required by SM8550/SM8750 AYN comm
 
 # ============== PWM ==============
 CONFIG_PWM_SN3112=m
+CONFIG_PWM_GPIO=y
 
 # ============== Panel power + backlight ==============
 CONFIG_DRM_PANEL_ILITEK_IL97680A=y          # Retroid Pocket Nova
@@ -180,6 +187,7 @@ CONFIG_JOYSTICK_XPAD_LEDS=y
 
 # ============== Audio ==============
 CONFIG_SND_SOC_AW88166=m
+CONFIG_SND_SOC_SC8280XP=m
 CONFIG_SND_SOC_AW88261=m               # KONKR Pocket FIT Elite speaker amp
 # absent snd-seq spams udev at boot — Fedora's snd-pcm modprobe rule pulls it in
 CONFIG_SND_SEQUENCER=m

@@ -126,6 +126,45 @@ v9_20260729_qualcomm_crypto_qce_runtime_pm_interconnect.patch
 0901-power-supply-qcom-battmgr-fix-charge-unit.patch
 0902-power-supply-qcom-battmgr-expose-charge-now.patch
 
+# ============== SM4450 (Anbernic RG 55G1) ==============
+sm4450-0001-drm-msm-adreno-add-a613-catalog-entry.patch
+sm4450-0002-pmdomain-qcom-rpmhpd-add-lcx-for-sm4450.patch
+sm4450-0003-remoteproc-qcom-pas-add-sm4450-adsp-wpss.patch
+sm4450-0004-regulator-qcom-rpmh-add-pm6450.patch
+sm4450-0005-soc-qcom-pd-mapper-add-sm4450.patch
+sm4450-0006-interconnect-qcom-add-sm4450.patch
+sm4450-0008-iommu-arm-smmu-qcom-add-sm4450.patch
+sm4450-0009-drm-msm-add-sm4450-display.patch
+sm4450-0011-clk-qcom-dispcc-sm4450-fix-mdp-clk-src-ops.patch
+sm4450-0012-clk-qcom-dispcc-sm4450-quiesce-splash.patch
+sm4450-0013-clk-qcom-gpucc-sm4450-add-hlos1-vote-gpu-smmu.patch
+sm4450-0014-clk-qcom-gpucc-sm4450-enable-gx-gdsc.patch
+sm4450-0015-drm-msm-a6xx-avoid-gmu-cx-reads-on-a613.patch
+sm4450-0017-clk-qcom-gpucc-sm4450-fix-gfx3d-rcg-ops.patch
+sm4450-0018-clk-qcom-gpucc-sm4450-retain-gx-gdsc-regs.patch
+sm4450-0019-drm-msm-dpu-stop-boot-scanout.patch
+sm4450-0022-regulator-qcom-rpmh-add-pbs-type.patch
+sm4450-0023-leds-qcom-lpg-add-pm6450-pwm.patch
+sm4450-0024-serial-qcom-geni-restart-terminated-rx-command.patch
+sm4450-0030-ASoC-qcom-sc8280xp-i2s-clk-support.patch
+sm4450-0031-ASoC-codecs-aw88166-support-changing-sample-rate-and-bit-width.patch
+sm4450-0032-ASoC-codecs-aw88166-reduce-log-spam.patch
+sm4450-0033-ASoC-codecs-aw88166-remove-fade-in-out-on-start-stop.patch
+sm4450-0034-ASoC-codecs-aw88166-make-volume-control-usable.patch
+sm4450-0039-soundwire-qcom-arm-wake-detector-for-clock-stop.patch
+sm4450-0040-phy-qcom-qmp-combo-add-sm4450.patch
+sm4450-0042-phy-qcom-qmp-combo-prevent-pm-runtime-suspend-at-boot.patch
+sm4450-0045-ath10k-use-soc-serial.patch
+sm4450-0046-bluetooth-hci_qca-include-wcn3950-in-wcn-family-switches.patch
+sm4450-0047-bluetooth-hci_qca-drop-baudrate-vendor-event-for-wcn3950.patch
+sm4450-0048-bluetooth-hci_qca-keep-ibs-disabled-for-wcn3950.patch
+sm4450-0049-usb-typec-ucsi_glink-add-sm4450-quirk.patch
+sm4450-0050-drm-panel-add-focaltech-ft7131m.patch
+sm4450-0051-power-supply-qcom_battmgr-allow-setting-the-USB-input-current-limit.patch
+sm4450-0052-power-supply-qcom_battmgr-report-the-USB-adapter-type.patch
+sm4450-0053-input-add-singleadc-joypad.patch
+sm4450-0054-power-supply-rename-qcom-battmgr-sysfs.patch
+
 # ============== SM8650 (AYANEO Pocket S2, KONKR Pocket FIT) ==============
 0001-pcie-update-sm8650-dtsi.patch
 0006-add-hw_params-callback-function-to-drm_connector_hdmi_audio_ops.patch

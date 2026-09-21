@@ -1,0 +1,54 @@
+From: Philippe Simons <simons.philippe@gmail.com>
+Subject: [PATCH] ASoC: qcom: sc8280xp: add Senary MI2S support
+
+--- a/sound/soc/qcom/sc8280xp.c
++++ b/sound/soc/qcom/sc8280xp.c
+@@ -5,6 +5,7 @@
+ #include <linux/clk.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/string.h>
+ #include <sound/soc.h>
+ #include <sound/soc-dapm.h>
+ #include <sound/pcm.h>
+@@ -76,13 +77,16 @@
+ 	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+ 	struct sc8280xp_snd_data *pdata = snd_soc_card_get_drvdata(rtd->card);
+ 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+-	struct snd_soc_dai *codec_dai = snd_soc_rtd_to_codec(rtd, 0);
++	struct snd_soc_dai *codec_dai;
++	int i;
+ 
+ 	switch (cpu_dai->id) {
+ 	case PRIMARY_MI2S_RX:
++	case SENARY_MI2S_RX:
+ 		clk_prepare_enable(pdata->i2s_clk);
+ 		snd_soc_dai_set_fmt(cpu_dai, fmt);
+-		snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
++		for_each_rtd_codec_dais(rtd, i, codec_dai)
++			snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
+ 		break;
+ 	default:
+ 		break;
+@@ -99,6 +103,7 @@
+ 
+ 	switch (cpu_dai->id) {
+ 	case PRIMARY_MI2S_RX:
++	case SENARY_MI2S_RX:
+ 		clk_disable_unprepare(pdata->i2s_clk);
+ 		break;
+ 	default:
+@@ -123,6 +128,13 @@
+ 	channels->min = 2;
+ 	channels->max = 2;
+ 	switch (cpu_dai->id) {
++	case SENARY_MI2S_RX:
++		/* The Retroid Pocket Classic wires both amps to one channel. */
++		if (!strcmp(rtd->card->name, "RetroidPocketClassic")) {
++			channels->min = 1;
++			channels->max = 1;
++		}
++		break;
+ 	case TX_CODEC_DMA_TX_0:
+ 	case TX_CODEC_DMA_TX_1:
+ 	case TX_CODEC_DMA_TX_2:
