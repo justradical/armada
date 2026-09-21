@@ -2,26 +2,26 @@ From: Armada <noreply@armada.local>
 Subject: [PATCH] drm: allow preferring 8-bit composition buffers
 
 Some inline rotators require UBWC formats that are unavailable for the
-default 10-bit composition buffer.  Allow device profiles to prefer the
-8-bit fallback for both primary and overlay composition.
+default opaque composition buffer.  Allow device profiles to prefer the
+8-bit alpha format for both primary and overlay composition.
 
 ---
- src/Backends/DRMBackend.cpp | 37 +++++++++++++++++++------------------
- 1 file changed, 19 insertions(+), 18 deletions(-)
+ src/Backends/DRMBackend.cpp | 39 +++++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
 diff --git a/src/Backends/DRMBackend.cpp b/src/Backends/DRMBackend.cpp
 --- a/src/Backends/DRMBackend.cpp
 +++ b/src/Backends/DRMBackend.cpp
-@@ -2013,29 +2013,30 @@ bool init_drm(struct drm_t *drm, int width, int height, int refresh)
+@@ -2013,29 +2013,32 @@ bool init_drm(struct drm_t *drm, int width, int height, int refresh)
  	// a bunch of horrible banding when going to G2.2 curve.
  	// It ensures that we can dither that.
 -	g_nDRMFormat = pick_plane_format(&drm->primary_formats, DRM_FORMAT_XRGB2101010, DRM_FORMAT_ARGB2101010);
 -	if ( g_nDRMFormat == DRM_FORMAT_INVALID ) {
-+	const bool bPrefer8BitOutput = env_to_bool( getenv( "GAMESCOPE_DRM_PREFER_8BIT" ) );
++	const bool bPrefer8BitAlpha = env_to_bool( getenv( "GAMESCOPE_DRM_PREFER_8BIT_ALPHA" ) );
 +	g_nDRMFormat = DRM_FORMAT_INVALID;
-+	if ( !bPrefer8BitOutput )
++	if ( !bPrefer8BitAlpha )
 +		g_nDRMFormat = pick_plane_format(&drm->primary_formats, DRM_FORMAT_XRGB2101010, DRM_FORMAT_ARGB2101010);
-+	if ( !bPrefer8BitOutput && g_nDRMFormat == DRM_FORMAT_INVALID )
++	if ( !bPrefer8BitAlpha && g_nDRMFormat == DRM_FORMAT_INVALID )
  		g_nDRMFormat = pick_plane_format(&drm->primary_formats, DRM_FORMAT_XBGR2101010, DRM_FORMAT_ABGR2101010);
 -		if ( g_nDRMFormat == DRM_FORMAT_INVALID ) {
 -			g_nDRMFormat = pick_plane_format(&drm->primary_formats, DRM_FORMAT_XRGB8888, DRM_FORMAT_ARGB8888);
@@ -31,7 +31,9 @@ diff --git a/src/Backends/DRMBackend.cpp b/src/Backends/DRMBackend.cpp
 -			}
 -		}
 +	if ( g_nDRMFormat == DRM_FORMAT_INVALID )
-+		g_nDRMFormat = pick_plane_format(&drm->primary_formats, DRM_FORMAT_XRGB8888, DRM_FORMAT_ARGB8888);
++		g_nDRMFormat = pick_plane_format(&drm->primary_formats,
++			bPrefer8BitAlpha ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888,
++			DRM_FORMAT_ARGB8888);
 +	if ( g_nDRMFormat == DRM_FORMAT_INVALID ) {
 +		drm_log.errorf("Primary plane doesn't support any formats >= 8888");
 +		return false;
@@ -42,9 +44,9 @@ diff --git a/src/Backends/DRMBackend.cpp b/src/Backends/DRMBackend.cpp
 -		g_nDRMFormatOverlay = pick_plane_format(&drm->formats, DRM_FORMAT_ARGB2101010, DRM_FORMAT_ARGB2101010);
 -		if ( g_nDRMFormatOverlay == DRM_FORMAT_INVALID ) {
 +		g_nDRMFormatOverlay = DRM_FORMAT_INVALID;
-+		if ( !bPrefer8BitOutput )
++		if ( !bPrefer8BitAlpha )
 +			g_nDRMFormatOverlay = pick_plane_format(&drm->formats, DRM_FORMAT_ARGB2101010, DRM_FORMAT_ARGB2101010);
-+		if ( !bPrefer8BitOutput && g_nDRMFormatOverlay == DRM_FORMAT_INVALID )
++		if ( !bPrefer8BitAlpha && g_nDRMFormatOverlay == DRM_FORMAT_INVALID )
  			g_nDRMFormatOverlay = pick_plane_format(&drm->formats, DRM_FORMAT_ABGR2101010, DRM_FORMAT_ABGR2101010);
 -			if ( g_nDRMFormatOverlay == DRM_FORMAT_INVALID ) {
 -				g_nDRMFormatOverlay = pick_plane_format(&drm->formats, DRM_FORMAT_ARGB8888, DRM_FORMAT_ARGB8888);

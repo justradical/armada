@@ -712,7 +712,7 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/sm4450-0009b-drm-msm-dpu-allow-argb8888-inline-rotation.patch`
   source: Armada corrective patch
   upstream: unknown
-  notes: Allows Gamescope's UBWC XRGB8888 and ARGB8888 output through SM4450 inline rotation.
+  notes: Allows Gamescope's UBWC ARGB8888 output through SM4450 inline rotation.
 - `patches/sm4450-0011-clk-qcom-dispcc-sm4450-fix-mdp-clk-src-ops.patch`
   source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0011-clk-qcom-dispcc-sm4450-fix-mdp-clk-src-ops.patch
   upstream: unknown
