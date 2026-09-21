@@ -151,8 +151,10 @@ sm4450-0031-ASoC-codecs-aw88166-support-changing-sample-rate-and-bit-width.patch
 sm4450-0032-ASoC-codecs-aw88166-reduce-log-spam.patch
 sm4450-0033-ASoC-codecs-aw88166-remove-fade-in-out-on-start-stop.patch
 sm4450-0034-ASoC-codecs-aw88166-make-volume-control-usable.patch
+sm4450-0035-ASoC-codecs-aw88166-drop-duplicate-dai-stubs.patch
 sm4450-0039-soundwire-qcom-arm-wake-detector-for-clock-stop.patch
 sm4450-0040-phy-qcom-qmp-combo-add-sm4450.patch
+sm4450-0040a-phy-qcom-qmp-combo-use-existing-calibration.patch
 sm4450-0042-phy-qcom-qmp-combo-prevent-pm-runtime-suspend-at-boot.patch
 sm4450-0045-ath10k-use-soc-serial.patch
 sm4450-0046-bluetooth-hci_qca-include-wcn3950-in-wcn-family-switches.patch

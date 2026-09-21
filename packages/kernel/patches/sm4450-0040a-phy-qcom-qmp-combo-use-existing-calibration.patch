@@ -1,0 +1,23 @@
+From: Armada <noreply@armada.local>
+Subject: [PATCH] phy: qcom: qmp-combo: use existing DP calibration
+
+The SM4450 configuration uses the v4 DP tables and callbacks, but this
+kernel has no qmp_v4_calibrate_dp_phy implementation.  Leave calibration
+unset, matching the existing SM8350 configuration that uses the same v4
+callback family.
+
+---
+ drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+@@ -2934,7 +2934,6 @@
+ 	.configure_dp_tx	= qmp_v4_configure_dp_tx,
+ 	.configure_dp_clocks	= qmp_v3_configure_dp_clocks,
+ 	.configure_dp_phy	= qmp_v4_configure_dp_phy,
+-	.calibrate_dp_phy	= qmp_v4_calibrate_dp_phy,
+ 
+ 	.reset_list		= msm8996_usb3phy_reset_l,
+ 	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),

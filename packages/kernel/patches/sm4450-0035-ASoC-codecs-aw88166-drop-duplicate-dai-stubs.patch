@@ -1,0 +1,88 @@
+From: Armada <noreply@armada.local>
+Subject: [PATCH] ASoC: codecs: aw88166: drop duplicate DAI stubs
+
+The Armada AYN codec patch already supplies the DAI callbacks.  Keep the
+SM4450 rate/format callbacks from the following patch and remove the older
+stubs that otherwise redefine them.
+
+---
+ sound/soc/codecs/aw88166.c | 53 +----------------------------------------------
+ 1 file changed, 53 deletions(-)
+
+diff --git a/sound/soc/codecs/aw88166.c b/sound/soc/codecs/aw88166.c
+--- a/sound/soc/codecs/aw88166.c
++++ b/sound/soc/codecs/aw88166.c
+@@ -17,8 +17,7 @@
+ #include <linux/regmap.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+-#include <sound/pcm_params.h>
+ #include <sound/tlv.h>
+ #include "aw88166.h"
+ #include "aw88395/aw88395_device.h"
+ 
+@@ -1252,57 +1251,6 @@
+ 	return 0;
+ }
+ 
+-static int aw88166_startup(struct snd_pcm_substream *substream,
+-			   struct snd_soc_dai *dai)
+-{
+-	dev_dbg(dai->dev, "startup stream=%d", substream->stream);
+-	return 0;
+-}
+-
+-static int aw88166_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+-{
+-	dev_dbg(dai->dev, "set_fmt: 0x%x", fmt);
+-	return 0;
+-}
+-
+-static int aw88166_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
+-				  unsigned int freq, int dir)
+-{
+-	dev_dbg(dai->dev, "set_sysclk: id=%d freq=%u dir=%d", clk_id, freq, dir);
+-	return 0;
+-}
+-
+-static int aw88166_hw_params(struct snd_pcm_substream *substream,
+-			     struct snd_pcm_hw_params *params,
+-			     struct snd_soc_dai *dai)
+-{
+-	dev_dbg(dai->dev, "hw_params: rate=%u width=%u ch=%u",
+-		params_rate(params), snd_pcm_format_width(params_format(params)),
+-		params_channels(params));
+-	return 0;
+-}
+-
+-static int aw88166_mute(struct snd_soc_dai *dai, int mute, int stream)
+-{
+-	dev_dbg(dai->dev, "mute state=%d stream=%d", mute, stream);
+-	return 0;
+-}
+-
+-static void aw88166_shutdown(struct snd_pcm_substream *substream,
+-			     struct snd_soc_dai *dai)
+-{
+-	dev_dbg(dai->dev, "shutdown stream=%d", substream->stream);
+-}
+-
+-static const struct snd_soc_dai_ops aw88166_dai_ops = {
+-	.startup = aw88166_startup,
+-	.set_fmt = aw88166_set_fmt,
+-	.set_sysclk = aw88166_set_dai_sysclk,
+-	.hw_params = aw88166_hw_params,
+-	.mute_stream = aw88166_mute,
+-	.shutdown = aw88166_shutdown,
+-};
+-
+ static int aw88166_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ {
+ 	struct snd_soc_component *component = dai->component;
+@@ -1453,7 +1401,6 @@
+ 			.formats = AW88166_FORMATS,
+ 		},
+ 		.ops = &aw88166_dai_ops,
+-		.ops = &aw88166_dai_ops,
+ 	},
+ };
