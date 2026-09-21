@@ -809,3 +809,6 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `dts/sm4450-anbernic-rg55g1.dts`
   source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/linux/dts/qcom/sm4450-anbernic-rg55g1.dts
   notes: Imported verbatim from ROCKNIX; SHA-256 `e970b25b2756b140a51738c11b97400ae13ca7f2780bac88d606db253cfc533d`.
+- `dts/sm4450-anbernic-rg55g1.dts.patch`
+  source: armada
+  notes: Inverts both touchscreen axes to match the displayed panel orientation.

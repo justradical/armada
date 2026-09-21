@@ -1,0 +1,11 @@
+From: JPyke3 <github@pyk.ee>
+Subject: [PATCH] arm64: dts: qcom: rg55g1: correct touch orientation
+
+The RG55G1 digitizer reports both axes opposite to the displayed panel.
+Invert X and Y so touch coordinates match the screen.
+
+--- a/arch/arm64/boot/dts/qcom/sm4450-anbernic-rg55g1.dts
++++ b/arch/arm64/boot/dts/qcom/sm4450-anbernic-rg55g1.dts
+@@ -2053,0 +2054,2 @@
++			touchscreen-inverted-x;
++			touchscreen-inverted-y;
