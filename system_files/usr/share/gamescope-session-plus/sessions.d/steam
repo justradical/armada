@@ -4,9 +4,10 @@
 
 source /usr/lib/armada/storage-lib
 
-# Adreno 613 needs Turnip's software multiview path for Gamescope.
+# Adreno 613 needs software multiview and an 8-bit rotatable scanout.
 if [[ "${ARMADA_DEVICE_ID:-}" == "anbernic-rg55g1" ]]; then
     export TU_DEBUG="${TU_DEBUG:+${TU_DEBUG},}noconform"
+    export GAMESCOPE_DRM_PREFER_8BIT=1
 fi
 
 function short_session_recover {

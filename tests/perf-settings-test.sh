@@ -33,6 +33,11 @@ session_turnip_debug() {
         bash -c "$SESSION_TURNIP_BLOCK"$'\n''printf "%s" "${TU_DEBUG:-}"'
 }
 
+session_drm_prefer_8bit() {
+    env -u GAMESCOPE_DRM_PREFER_8BIT ARMADA_DEVICE_ID="$1" \
+        bash -c "$SESSION_TURNIP_BLOCK"$'\n''printf "%s" "${GAMESCOPE_DRM_PREFER_8BIT:-}"'
+}
+
 [[ "$(session_turnip_debug anbernic-rg55g1)" == noconform ]] || {
     printf 'FAIL: RG55G1 session did not enable Turnip noconform\n' >&2
     exit 1
@@ -44,6 +49,14 @@ session_turnip_debug() {
 [[ "$(TU_DEBUG=sync ARMADA_DEVICE_ID=anbernic-rg55g1 \
     bash -c "$SESSION_TURNIP_BLOCK"$'\n''printf "%s" "$TU_DEBUG"')" == sync,noconform ]] || {
     printf 'FAIL: RG55G1 session did not preserve existing TU_DEBUG flags\n' >&2
+    exit 1
+}
+[[ "$(session_drm_prefer_8bit anbernic-rg55g1)" == 1 ]] || {
+    printf 'FAIL: RG55G1 session did not prefer an 8-bit DRM output\n' >&2
+    exit 1
+}
+[[ -z "$(session_drm_prefer_8bit ayn-odin-2)" ]] || {
+    printf 'FAIL: non-RG55G1 session preferred an 8-bit DRM output\n' >&2
     exit 1
 }
 
