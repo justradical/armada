@@ -1,0 +1,22 @@
+From: Armada <noreply@armada.local>
+Subject: [PATCH] drm/msm/dpu: allow ARGB8888 inline rotation on SM4450
+
+Gamescope uses UBWC ARGB8888 buffers for the RG55G1 output.  Include the
+format in the SM4450 inline-rotation list so the atomic plane check accepts
+them.
+
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -212,6 +212,7 @@
+ 
+ static const u32 rotation_sm4450_formats[] = {
+ 	DRM_FORMAT_NV12,
++	DRM_FORMAT_ARGB8888,
+ 	DRM_FORMAT_ABGR8888,
+ 	DRM_FORMAT_ABGR2101010,
+ };

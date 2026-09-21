@@ -383,7 +383,7 @@ check("device-env RG55G1 profile",
       rg55g1.get("ARMADA_DEVICE_ID") == "anbernic-rg55g1" and
       rg55g1.get("ARMADA_SOC_CLASS") == "SM4450" and
       rg55g1.get("ARMADA_PANEL_ORIENTATION") == "right" and
-      rg55g1.get("ARMADA_GAMESCOPE_USE_ROTATION_SHADER") == "1" and
+      rg55g1.get("ARMADA_GAMESCOPE_USE_ROTATION_SHADER") == "0" and
       rg55g1.get("ARMADA_LITTLE_CORES") == "0-5" and
       rg55g1.get("ARMADA_BIG_CORES") == "6-7" and
       rg55g1.get("ARMADA_PRIME_CORES") == "6-7" and
