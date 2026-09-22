@@ -38,9 +38,9 @@ session_drm_prefer_8bit_alpha() {
         bash -c "$SESSION_TURNIP_BLOCK"$'\n''printf "%s" "${GAMESCOPE_DRM_PREFER_8BIT_ALPHA:-}"'
 }
 
-session_drm_require_qcom_compressed_output() {
-    env -u GAMESCOPE_DRM_REQUIRE_QCOM_COMPRESSED_OUTPUT ARMADA_DEVICE_ID="$1" \
-        bash -c "$SESSION_TURNIP_BLOCK"$'\n''printf "%s" "${GAMESCOPE_DRM_REQUIRE_QCOM_COMPRESSED_OUTPUT:-}"'
+session_drm_fallback_composition_rotation() {
+    env -u GAMESCOPE_DRM_FALLBACK_COMPOSITION_ROTATION ARMADA_DEVICE_ID="$1" \
+        bash -c "$SESSION_TURNIP_BLOCK"$'\n''printf "%s" "${GAMESCOPE_DRM_FALLBACK_COMPOSITION_ROTATION:-}"'
 }
 
 [[ "$(session_turnip_debug anbernic-rg55g1)" == noconform ]] || {
@@ -64,12 +64,12 @@ session_drm_require_qcom_compressed_output() {
     printf 'FAIL: non-RG55G1 session preferred an 8-bit alpha DRM output\n' >&2
     exit 1
 }
-[[ "$(session_drm_require_qcom_compressed_output anbernic-rg55g1)" == 1 ]] || {
-    printf 'FAIL: RG55G1 session did not require UBWC DRM output\n' >&2
+[[ "$(session_drm_fallback_composition_rotation anbernic-rg55g1)" == 1 ]] || {
+    printf 'FAIL: RG55G1 session did not enable fallback composition rotation\n' >&2
     exit 1
 }
-[[ -z "$(session_drm_require_qcom_compressed_output ayn-odin-2)" ]] || {
-    printf 'FAIL: non-RG55G1 session required UBWC DRM output\n' >&2
+[[ -z "$(session_drm_fallback_composition_rotation ayn-odin-2)" ]] || {
+    printf 'FAIL: non-RG55G1 session enabled fallback composition rotation\n' >&2
     exit 1
 }
 
