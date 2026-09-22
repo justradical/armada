@@ -46,3 +46,5 @@ to a commit, or `armada` if it's original; a URL source with no `notes` is verba
   source: armada
 - `patches/0022-drm-allow-preferring-8-bit-composition-buffers.patch`
   source: armada
+- `patches/0023-vulkan-allow-requiring-ubwc-output-buffers.patch`
+  source: armada

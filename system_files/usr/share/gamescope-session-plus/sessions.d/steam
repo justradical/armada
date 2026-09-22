@@ -4,10 +4,11 @@
 
 source /usr/lib/armada/storage-lib
 
-# Adreno 613 needs software multiview and an 8-bit rotatable scanout.
+# Adreno 613 needs software multiview and UBWC scanout buffers.
 if [[ "${ARMADA_DEVICE_ID:-}" == "anbernic-rg55g1" ]]; then
     export TU_DEBUG="${TU_DEBUG:+${TU_DEBUG},}noconform"
     export GAMESCOPE_DRM_PREFER_8BIT_ALPHA=1
+    export GAMESCOPE_DRM_REQUIRE_QCOM_COMPRESSED_OUTPUT=1
 fi
 
 function short_session_recover {
