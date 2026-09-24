@@ -2,9 +2,6 @@
 name: Build images
 on:
   push:
-    branches:
-      - main
-      - staging
   workflow_dispatch:
 
 env:
