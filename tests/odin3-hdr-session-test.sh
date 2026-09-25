@@ -57,6 +57,8 @@ for entry in \
     retroid-pocket-6:750:retroid.vtdr6130.oled.lua:375 \
     retroid-pocket-5:580:retroid.ch13726a.oled.lua:290 \
     retroid-pocket-flip2:580:retroid.ch13726a.oled.lua:290; do
+    retroid-pocket-5-visionox:750:retroid.vtdr6130.oled.lua:375 \
+    retroid-pocket-flip2-visionox:750:retroid.vtdr6130.oled.lua:375; do
     IFS=: read -r device nits profile fall <<<"$entry"
     if ! grep -Fxq "ARMADA_HDR_NITS=$nits" "$DEVICES/$device.conf"; then
         printf '%s.conf does not advertise ARMADA_HDR_NITS=%s\n' "$device" "$nits" >&2
