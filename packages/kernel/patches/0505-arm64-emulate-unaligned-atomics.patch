@@ -80,7 +80,7 @@ diff --git a/arch/arm64/kernel/unaligned_atomic.c b/arch/arm64/kernel/unaligned_
 new file mode 100644
 --- /dev/null
 +++ b/arch/arm64/kernel/unaligned_atomic.c
-@@ -0,0 +1,2056 @@
+@@ -0,0 +1,2057 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +
 +#include <linux/compiler.h>
@@ -212,10 +212,11 @@ new file mode 100644
 +
 +  uaccess_enable_privileged();
 +  asm volatile("1: ldaxp %[ResultLower], %[ResultUpper], [%[Addr]]\n"
-+               "   stlxp %w[Tmp], %[ResultLower], %[ResultUpper], [%[Addr]]\n"
++               "3: stlxp %w[Tmp], %[ResultLower], %[ResultUpper], [%[Addr]]\n"
 +               "   cbnz %w[Tmp], 1b\n"
 +               "2:\n"
 +               _ASM_EXTABLE_UACCESS_ERR(1b, 2b, %w[ret])
++               _ASM_EXTABLE_UACCESS_ERR(3b, 2b, %w[ret])
 +               : [Tmp] "=&r"(Tmp), [ResultLower] "=&r"(Lower), [ResultUpper] "=&r"(Upper), [ret] "+r"(ret)
 +               : [Addr] "r"(Addr)
 +               : "memory");

@@ -28,6 +28,20 @@ if [[ -d "${steam_runtime_bin}" ]]; then
 fi
 export FUSERMOUNT_PROG=/run/host/usr/bin/fusermount3
 
+# Steam's CEF children apply their own CPU mask after launch. A device profile
+# may opt into restoring a more suitable mask for webhelper threads; the empty
+# default means this has no effect on other devices.
+if [[ -z ${ARMADA_STEAM_WEBHELPER_CORES+x} ]]; then
+    device_env=${ARMADA_DEVICE_ENV:-/usr/libexec/armada/device-env}
+    if [[ -x "$device_env" ]]; then
+        eval "$("$device_env")"
+    fi
+fi
+affinity_helper=${ARMADA_STEAM_AFFINITY_HELPER:-/usr/libexec/armada/steam-client-affinity}
+if [[ -n ${ARMADA_STEAM_WEBHELPER_CORES:-} && -x "$affinity_helper" ]]; then
+    "$affinity_helper" "$$" "$ARMADA_STEAM_WEBHELPER_CORES" &
+fi
+
 # prune the Proton 11 registration earlier releases wrote; the internal-name
 # match keeps user-created tool dirs safe
 proton11_reg="${steam_root}/compatibilitytools.d/proton-11-arm64"

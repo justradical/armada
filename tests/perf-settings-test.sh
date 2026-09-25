@@ -413,7 +413,10 @@ check("device-env RG55G1 profile",
       rg55g1.get("ARMADA_LITTLE_CORES") == "0-5" and
       rg55g1.get("ARMADA_BIG_CORES") == "6-7" and
       rg55g1.get("ARMADA_PRIME_CORES") == "6-7" and
+      rg55g1.get("ARMADA_STEAM_WEBHELPER_CORES") == "0-5" and
       rg55g1.get("ARMADA_IP_TARGETS") == "ds5")
+check("device-env Steam affinity is device-specific",
+      odin3.get("ARMADA_STEAM_WEBHELPER_CORES") == "''")
 
 # --- armada-powerd: config parsing ------------------------------------------
 powerd = load_script("armada-powerd")
