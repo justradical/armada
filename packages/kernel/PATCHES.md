@@ -806,6 +806,10 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
   source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0053-input-add-singleadc-joypad.patch
   upstream: unknown
   notes: Kconfig and Kbuild context is refreshed for Armada's combined kernel.
+- `patches/sm4450-0053a-input-singleadc-joypad-rgb-leds.patch`
+  source: https://github.com/batocera-linux/batocera.linux/blob/master/board/batocera/qualcomm/sm4450/linux_patches/0055-bato-singleadc-joypad-rgb-leds.patch
+  upstream: unknown
+  notes: Adapted to expose the stock RG55G1 MCU lighting attributes needed by Armada RGB; command commits include the required tag and CRC-16/XMODEM.
 - `patches/sm4450-0054-power-supply-rename-qcom-battmgr-sysfs.patch`
   source: https://github.com/ROCKNIX/distribution/blob/05efe5552ba5d908a121ae0f2b35dd9e46a46c74/projects/ROCKNIX/devices/SM4450/patches/linux/0054-power-supply-rename-qcom-battmgr-sysfs.patch
   upstream: unknown

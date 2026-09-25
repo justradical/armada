@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 pub enum LightingBackend {
     Channels(ChannelBackend),
     Multicolor(MulticolorBackend),
+    SingleAdc(SingleAdcBackend),
     Unsupported(String),
 }
 
@@ -18,13 +19,14 @@ impl LightingBackend {
         match self {
             Self::Channels(backend) => backend.apply(config),
             Self::Multicolor(backend) => backend.apply(config),
+            Self::SingleAdc(backend) => backend.apply(config),
             Self::Unsupported(reason) => bail!("{reason}"),
         }
     }
 
     pub fn unsupported_reason(&self) -> Option<&str> {
         match self {
-            Self::Channels(_) | Self::Multicolor(_) => None,
+            Self::Channels(_) | Self::Multicolor(_) | Self::SingleAdc(_) => None,
             Self::Unsupported(reason) => Some(reason),
         }
     }
@@ -33,8 +35,60 @@ impl LightingBackend {
         match self {
             Self::Channels(backend) => backend.correction.clone(),
             Self::Multicolor(backend) => backend.correction.clone(),
+            Self::SingleAdc(backend) => backend.correction.clone(),
             Self::Unsupported(_) => None,
         }
+    }
+}
+
+pub struct SingleAdcBackend {
+    root: PathBuf,
+    target: String,
+    correction: Option<ColorCorrection>,
+}
+
+impl SingleAdcBackend {
+    pub fn new(root: PathBuf, target: String) -> Self {
+        Self {
+            root,
+            target,
+            correction: None,
+        }
+    }
+
+    pub(crate) fn with_correction(mut self, correction: Option<ColorCorrection>) -> Self {
+        self.correction = correction;
+        self
+    }
+
+    fn apply(&self, config: &LightingConfig) -> Result<()> {
+        validate_names(std::slice::from_ref(&self.target))?;
+        let path: PathBuf = self.root.join(&self.target);
+        let [red, green, blue]: [u8; 3] = corrected_rgb(config, self.correction.as_ref());
+        let values: [(&str, String); 7] = [
+            ("led_mode", "1".into()),
+            ("led_level", config.brightness.to_string()),
+            ("custum_rgb_r", red.to_string()),
+            ("custum_rgb_g", green.to_string()),
+            ("custum_rgb_b", blue.to_string()),
+            ("led_switch", u8::from(config.enabled).to_string()),
+            ("led_set", "1".into()),
+        ];
+        let mut attributes: Vec<(String, File)> = values
+            .iter()
+            .map(|(name, value)| {
+                OpenOptions::new()
+                    .write(true)
+                    .open(path.join(name))
+                    .with_context(|| format!("open {} {name}", self.target))
+                    .map(|file| (value.clone(), file))
+            })
+            .collect::<Result<_>>()?;
+
+        for ((name, _), (value, file)) in values.iter().zip(attributes.iter_mut()) {
+            write_attr(file, value).with_context(|| format!("write {} {name}", self.target))?;
+        }
+        Ok(())
     }
 }
 

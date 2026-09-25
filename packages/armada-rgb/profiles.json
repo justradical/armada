@@ -114,12 +114,8 @@
     {
       "models": ["Anbernic RG 55G1"],
       "backend": {
-        "type": "channels",
-        "targets": [
-          "red=red:indicator",
-          "green=green:indicator",
-          "blue=blue:indicator"
-        ]
+        "type": "singleadc",
+        "target": "singleadc-joypad"
       }
     },
     {

@@ -167,6 +167,7 @@ sm4450-0050-drm-panel-add-focaltech-ft7131m.patch
 sm4450-0051-power-supply-qcom_battmgr-allow-setting-the-USB-input-current-limit.patch
 sm4450-0052-power-supply-qcom_battmgr-report-the-USB-adapter-type.patch
 sm4450-0053-input-add-singleadc-joypad.patch
+sm4450-0053a-input-singleadc-joypad-rgb-leds.patch
 sm4450-0054-power-supply-rename-qcom-battmgr-sysfs.patch
 
 # ============== SM8650 (AYANEO Pocket S2, KONKR Pocket FIT) ==============

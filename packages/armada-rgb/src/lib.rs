@@ -9,7 +9,7 @@ mod rgb_saturation_helper;
 mod runtime;
 mod state;
 
-pub use backend::{ChannelBackend, LightingBackend, MulticolorBackend};
+pub use backend::{ChannelBackend, LightingBackend, MulticolorBackend, SingleAdcBackend};
 pub use controller::Controller;
 pub use correction::ColorCorrection;
 pub use state::LightingConfig;

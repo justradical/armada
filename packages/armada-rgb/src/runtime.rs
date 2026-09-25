@@ -1,4 +1,6 @@
-use crate::{ChannelBackend, ColorCorrection, LightingBackend, MulticolorBackend};
+use crate::{
+    ChannelBackend, ColorCorrection, LightingBackend, MulticolorBackend, SingleAdcBackend,
+};
 use anyhow::{bail, Context, Result};
 use serde::Deserialize;
 use std::collections::HashSet;
@@ -11,6 +13,7 @@ const MODEL_PATH: &str = "/sys/firmware/devicetree/base/model";
 const PROFILE_VERSION: u32 = 1;
 const PROFILES_PATH: &str = "/usr/share/armada-rgb/profiles.json";
 const SYSFS_ROOT: &str = "/sys/class/leds";
+const PLATFORM_ROOT: &str = "/sys/bus/platform/devices";
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -33,6 +36,7 @@ struct DeviceProfile {
 enum BackendProfile {
     Channels { targets: Vec<String> },
     Multicolor { targets: Vec<String> },
+    Singleadc { target: String },
 }
 
 pub(crate) fn from_env() -> (PathBuf, LightingBackend) {
@@ -48,13 +52,22 @@ pub(crate) fn from_env() -> (PathBuf, LightingBackend) {
     let sysfs_root: PathBuf = env::var_os("ARMADA_RGB_SYSFS_ROOT")
         .map(PathBuf::from)
         .unwrap_or_else(|| SYSFS_ROOT.into());
+    let platform_root: PathBuf = env::var_os("ARMADA_RGB_PLATFORM_ROOT")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PLATFORM_ROOT.into());
 
-    let backend: LightingBackend = load_backend(&profiles_path, &model_path, sysfs_root)
-        .unwrap_or_else(|error| LightingBackend::Unsupported(format!("{error:#}")));
+    let backend: LightingBackend =
+        load_backend(&profiles_path, &model_path, sysfs_root, platform_root)
+            .unwrap_or_else(|error| LightingBackend::Unsupported(format!("{error:#}")));
     (config_path, backend)
 }
 
-fn load_backend(profiles_path: &Path, model_path: &Path, root: PathBuf) -> Result<LightingBackend> {
+fn load_backend(
+    profiles_path: &Path,
+    model_path: &Path,
+    root: PathBuf,
+    platform_root: PathBuf,
+) -> Result<LightingBackend> {
     let input: String = fs::read_to_string(profiles_path)
         .with_context(|| format!("read RGB profiles from {}", profiles_path.display()))?;
     let catalog: ProfileCatalog = parse_catalog(&input)?;
@@ -88,7 +101,14 @@ fn load_backend(profiles_path: &Path, model_path: &Path, root: PathBuf) -> Resul
                 MulticolorBackend::new(root, targets).with_correction(profile.correction),
             ))
         }
-        BackendProfile::Channels { .. } | BackendProfile::Multicolor { .. } => {
+        BackendProfile::Singleadc { target } if !target.is_empty() => {
+            Ok(LightingBackend::SingleAdc(
+                SingleAdcBackend::new(platform_root, target).with_correction(profile.correction),
+            ))
+        }
+        BackendProfile::Channels { .. }
+        | BackendProfile::Multicolor { .. }
+        | BackendProfile::Singleadc { .. } => {
             bail!("device profile has no RGB targets")
         }
     }

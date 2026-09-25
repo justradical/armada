@@ -1,0 +1,187 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Daniel Martin <dmanlfc@gmail.com>
+Date: Tue, 22 Sep 2026 17:00:00 +0100
+Subject: [PATCH] input: singleadc-joypad: drive the joystick RGB LEDs
+
+The RG55G1 stick LEDs are controlled by fields in the 64-byte request
+frame already sent to the joypad MCU. The layout was recovered from the
+stock single_mcu_joy.ko custom_led_setting implementation.
+
+Expose the stock sysfs attributes used by RGB control software. Values
+are staged until led_set is written; commit updates the command tag and
+CRC-16/XMODEM required by the MCU.
+
+Adapted from Batocera's RG55G1 RGB patch for Armada's driver name and
+static-colour requirements.
+
+--- a/drivers/input/joystick/Kconfig
++++ b/drivers/input/joystick/Kconfig
+@@ -403,6 +403,7 @@ config JOYSTICK_SINGLEADC_JOYPAD
+ 	tristate "Single-ADC / MCU SPI handheld gamepad"
+ 	depends on OF
+ 	depends on SPI
++	select CRC_ITU_T
+ 	help
+ 	  Say Y here to enable support for the handheld gamepad found on
+ 	  Anbernic SM4450 devices such as the RG 55G1, where the digital
+--- a/drivers/input/joystick/singleadc-joypad.c
++++ b/drivers/input/joystick/singleadc-joypad.c
+@@ -7,6 +7,7 @@
+  */
+ #define SUPPORT_MCU_SPI_ADC
+ 
++#include <linux/crc-itu-t.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/firmware/qcom/qcom_scm.h>
+@@ -145,9 +146,19 @@ struct spi_mcu_data {
+ 	int buf_len;
+ 	u32 crc_ok;
+ 	u32 crc_err;
++	u8 led_switch;
++	u8 led_mode;
++	u8 led_level;
++	u8 led_speed;
++	u8 led_r;
++	u8 led_g;
++	u8 led_b;
++	u8 led_tag;
+ };
+ 
+ static struct spi_mcu_data *g_smd;
++static void joypad_led_apply(struct spi_mcu_data *smd);
++#define JOYPAD_LED_SPEED_DEFAULT 0x32
+ 
+ /*
+  * Report request. Byte 10 selects what the MCU sends back: with 0x02 it
+@@ -577,6 +587,8 @@ static int joypad_mmio_spi_init(struct device *dev)
+ 		return -ENOMEM;
+ 	}
+ 	memcpy(smd->tx_buf, joypad_mcu_tx_cmd, 64);
++	smd->led_speed = JOYPAD_LED_SPEED_DEFAULT;
++	joypad_led_apply(smd);
+ 	g_smd = smd;
+ 
+ 	{
+@@ -597,11 +609,112 @@ static int joypad_mmio_spi_init(struct device *dev)
+ 	return 0;
+ }
+ 
++/*
++ * MCU request-frame lighting layout, recovered from stock single_mcu_joy.ko:
++ * [7] mode (1 = fixed RGB), [8] switch, [9] level, [10] effect speed,
++ * [11..13] RGB, [59] tag0, [60] incrementing tag1, and [61..62]
++ * CRC-16/XMODEM over bytes [7..60].
++ */
++#define JOYPAD_LED_OFF_MODE 7
++#define JOYPAD_LED_OFF_SWITCH 8
++#define JOYPAD_LED_OFF_LEVEL 9
++#define JOYPAD_LED_OFF_SPEED 10
++#define JOYPAD_LED_OFF_R 11
++#define JOYPAD_LED_OFF_G 12
++#define JOYPAD_LED_OFF_B 13
++#define JOYPAD_LED_OFF_TAG0 59
++#define JOYPAD_LED_OFF_TAG1 60
++#define JOYPAD_LED_OFF_CRC 61
++#define JOYPAD_LED_CRC_LEN (JOYPAD_LED_OFF_CRC - JOYPAD_LED_OFF_MODE)
++
++static void joypad_led_apply(struct spi_mcu_data *smd)
++{
++	u8 *frame = (u8 *)smd->tx_buf;
++	u16 crc;
++
++	if (!frame || smd->buf_len < 64)
++		return;
++
++	frame[JOYPAD_LED_OFF_MODE] = smd->led_mode;
++	frame[JOYPAD_LED_OFF_SWITCH] = smd->led_switch;
++	frame[JOYPAD_LED_OFF_LEVEL] = smd->led_level * 255 / 100;
++	frame[JOYPAD_LED_OFF_SPEED] = smd->led_speed;
++	frame[JOYPAD_LED_OFF_R] = smd->led_r;
++	frame[JOYPAD_LED_OFF_G] = smd->led_g;
++	frame[JOYPAD_LED_OFF_B] = smd->led_b;
++	memset(frame + JOYPAD_LED_OFF_B + 1, 0,
++	       JOYPAD_LED_OFF_TAG0 - JOYPAD_LED_OFF_B - 1);
++	frame[JOYPAD_LED_OFF_TAG0] = 0;
++	frame[JOYPAD_LED_OFF_TAG1] = ++smd->led_tag;
++
++	crc = crc_itu_t(0, frame + JOYPAD_LED_OFF_MODE, JOYPAD_LED_CRC_LEN);
++	frame[JOYPAD_LED_OFF_CRC] = crc >> 8;
++	frame[JOYPAD_LED_OFF_CRC + 1] = crc & 0xff;
++}
++
++static ssize_t joypad_led_u8_store(u8 *field, unsigned int maximum,
++				   const char *buf, size_t count)
++{
++	unsigned int value;
++
++	if (kstrtouint(buf, 0, &value))
++		return -EINVAL;
++	if (value > maximum)
++		value = maximum;
++	*field = value;
++	return count;
++}
++
++#define JOYPAD_LED_ATTR(_name, _field, _maximum)                         \
++static ssize_t _name##_show(struct device *dev,                         \
++			    struct device_attribute *attr, char *buf)       \
++{                                                                        \
++	if (!g_smd)                                                       \
++		return -ENODEV;                                             \
++	return sysfs_emit(buf, "%u\n", g_smd->_field);                    \
++}                                                                        \
++static ssize_t _name##_store(struct device *dev,                        \
++			     struct device_attribute *attr,                 \
++			     const char *buf, size_t count)                 \
++{                                                                        \
++	if (!g_smd)                                                       \
++		return -ENODEV;                                             \
++	return joypad_led_u8_store(&g_smd->_field, _maximum, buf, count); \
++}                                                                        \
++static DEVICE_ATTR_RW(_name)
++
++JOYPAD_LED_ATTR(led_switch, led_switch, 1);
++JOYPAD_LED_ATTR(led_mode, led_mode, 255);
++JOYPAD_LED_ATTR(led_level, led_level, 100);
++JOYPAD_LED_ATTR(led_speed, led_speed, 255);
++JOYPAD_LED_ATTR(custum_rgb_r, led_r, 255);
++JOYPAD_LED_ATTR(custum_rgb_g, led_g, 255);
++JOYPAD_LED_ATTR(custum_rgb_b, led_b, 255);
++
++static ssize_t led_set_store(struct device *dev,
++			     struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	if (!g_smd)
++		return -ENODEV;
++	joypad_led_apply(g_smd);
++	return count;
++}
++static DEVICE_ATTR_WO(led_set);
++
+ static struct attribute *joypad_attrs[] = {
+ 	&dev_attr_mcu_info.attr,
+ 	&dev_attr_mcu_frame.attr,
+ 	&dev_attr_mcu_cmd.attr,
+ 	&dev_attr_mcu_crc.attr,
++	&dev_attr_led_switch.attr,
++	&dev_attr_led_mode.attr,
++	&dev_attr_led_level.attr,
++	&dev_attr_led_speed.attr,
++	&dev_attr_custum_rgb_r.attr,
++	&dev_attr_custum_rgb_g.attr,
++	&dev_attr_custum_rgb_b.attr,
++	&dev_attr_led_set.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(joypad);
+@@ -1367,6 +1500,8 @@ static int sprd_spi_mcu_probe(struct spi_device *spi)
+ 		return -ENOMEM;
+ 	}
+ 	memcpy(smd->tx_buf, joypad_mcu_tx_cmd, min_t(int, smd->buf_len, 64));
++	smd->led_speed = JOYPAD_LED_SPEED_DEFAULT;
++	joypad_led_apply(smd);
+ 
+ 	spi_set_drvdata(spi, smd);
+ 
