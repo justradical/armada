@@ -343,6 +343,10 @@ no equivalent submission was found, or a permanent URL to the upstream submissio
 - `patches/0514a-of-property-honor-iommu-cells-in-iommu-map-devlinks.patch`
   source: armada
   upstream: local
+- `patches/1010-firmware-qcom-scm-allow-qseecom-on-ayaneo-pocket-ds.patch`
+  source: armada
+  upstream: local
+  notes: The allowlist exists because the driver doesn't support re-entrant QSEECOM calls yet; the Pocket DS is on it for access to Propeller's UEFI variables through efivarfs.
 - `patches/0001-pcie-update-sm8550-dtsi.patch`
   source: https://github.com/ROCKNIX/distribution/blob/bcf3b5bc574990b96543484575b06f912153a715/projects/ROCKNIX/devices/SM8550/patches/linux/0001-pcie-update-sm8550-dtsi.patch
   upstream: https://lore.kernel.org/r/20260611-wake-v2-33-2744251b1181@oss.qualcomm.com

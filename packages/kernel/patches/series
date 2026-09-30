@@ -118,6 +118,7 @@ v9_20260729_qualcomm_crypto_qce_runtime_pm_interconnect.patch
 0526-regulator-apply-state-mem-in-s2idle-only-for-opted-in-drivers.patch
 0514-PCI-qcom-honor-iommu-map-cell-count.patch
 0514a-of-property-honor-iommu-cells-in-iommu-map-devlinks.patch
+1010-firmware-qcom-scm-allow-qseecom-on-ayaneo-pocket-ds.patch
 
 # ============== SM8550 DTSI prerequisites ==============
 0001-pcie-update-sm8550-dtsi.patch
