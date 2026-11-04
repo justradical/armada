@@ -8,7 +8,7 @@ REST="${SRPM#wpa_supplicant-}"
 WPA_VER="${REST%%-*}"
 WPA_REL="${REST#*-}"
 WPA_REL="${WPA_REL%.fc*}"
-DIST=".fc44.armada" # sorts above stock .fc44 so dnf upgrades to the armada build
+DIST=".fc45.armada" # sorts above stock .fc45 so dnf upgrades to the armada build
 
 rm -rf out
 mkdir -p out
@@ -27,7 +27,7 @@ koji download-build --arch=src "${SRPM}"
 rpm -i "${SRPM}.src.rpm"
 SPEC="$HOME/rpmbuild/SPECS/wpa_supplicant.spec"
 
-# Force the stock numeric release so .fc44.armada sorts just above the base
+# Force the stock numeric release so .fc45.armada sorts just above the base
 # build, whatever release macro the spec uses.
 sed -i "s/^Release:.*/Release:        ${WPA_REL}%{?dist}/" "$SPEC"
 sed -i "/^%autochangelog/d" "$SPEC"

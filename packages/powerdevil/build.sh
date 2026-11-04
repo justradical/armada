@@ -8,7 +8,7 @@ REST="${SRPM#powerdevil-}"
 POWERDEVIL_VER="${REST%%-*}"
 POWERDEVIL_REL="${REST#*-}"
 POWERDEVIL_REL="${POWERDEVIL_REL%.fc*}"
-DIST=".fc44.armada"
+DIST=".fc45.armada"
 
 rm -rf out
 mkdir -p out

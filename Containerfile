@@ -1,5 +1,5 @@
 ARG CHUNKAH_IMAGE=quay.io/coreos/chunkah@sha256:ff8b8b466a942ec6000445d4001fc661e2fc5a952ad9ee29b4de9ab09d1d1708
-ARG BASE_IMAGE=quay.io/fedora/fedora-bootc:44
+ARG BASE_IMAGE=quay.io/fedora/fedora-bootc:45
 
 # Package images, resolved by content hash. The Packages workflow publishes each
 # as ghcr.io/<owner>/armada/pkg/<name>:<tag>, tagged by packages/package-hash.sh

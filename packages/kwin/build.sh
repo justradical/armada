@@ -8,7 +8,7 @@ REST="${SRPM#kwin-}"
 KWIN_VER="${REST%%-*}"
 KWIN_REL="${REST#*-}"
 KWIN_REL="${KWIN_REL%.fc*}"
-DIST=".fc44.armada"
+DIST=".fc45.armada"
 
 SUBPKGS="kwin kwin-common kwin-libs"
 

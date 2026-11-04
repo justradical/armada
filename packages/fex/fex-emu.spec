@@ -19,7 +19,7 @@
 # Thunks ON: without HostThunks the loader SIGILLs on every x86 binary. Needs has_sysroot=1.
 %bcond thunks 1
 %global has_sysroot 1
-%global sysroot_version fc44-armada
+%global sysroot_version fc45-armada
 
 Name:       fex-emu
 # Snapshots sort after their base release and before the next release.

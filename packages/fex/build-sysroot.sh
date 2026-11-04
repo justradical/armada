@@ -5,10 +5,10 @@
 # changes far less often than FEX itself. build.sh calls it when absent.
 set -euxo pipefail
 
-SYSROOT_VERSION="${SYSROOT_VERSION:-fc44-armada}"
+SYSROOT_VERSION="${SYSROOT_VERSION:-fc45-armada}"
 SYSROOT_TARBALL="fex-sysroot-${SYSROOT_VERSION}.tar.gz"
 
 dnf -y install dnf-plugins-core rpmdevtools
 
-bash build-fex-sysroot.sh 44
-mv fex-sysroot-fc44-*.tar.gz "${SYSROOT_TARBALL}"
+bash build-fex-sysroot.sh 45
+mv fex-sysroot-fc45-*.tar.gz "${SYSROOT_TARBALL}"

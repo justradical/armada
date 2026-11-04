@@ -5,7 +5,7 @@ set -euxo pipefail
 source ./BASE.env
 source /src/toolchain.env
 
-SYSROOT_VERSION="${SYSROOT_VERSION:-fc44-armada}"
+SYSROOT_VERSION="${SYSROOT_VERSION:-fc45-armada}"
 SYSROOT_TARBALL="fex-sysroot-${SYSROOT_VERSION}.tar.gz"
 
 # The stage copies this in from pkg-fex-sysroot. Dev builds produce it here.

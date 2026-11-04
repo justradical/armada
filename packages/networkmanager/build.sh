@@ -8,7 +8,7 @@ REST="${SRPM#NetworkManager-}"
 NM_VER="${REST%%-*}"
 NM_REL="${REST#*-}"
 NM_REL="${NM_REL%.fc*}"
-DIST=".fc44.armada" # sorts above stock .fc44 so dnf upgrades to the armada build
+DIST=".fc45.armada" # sorts above stock .fc45 so dnf upgrades to the armada build
 
 # Every NM subpackage the image installs must ship at one EVR: they cross-require
 # each other by exact version-release.
@@ -31,7 +31,7 @@ koji download-build --arch=src "${SRPM}"
 rpm -i "${SRPM}.src.rpm"
 SPEC="$HOME/rpmbuild/SPECS/NetworkManager.spec"
 
-# Force the stock numeric release so .fc44.armada sorts just above the base
+# Force the stock numeric release so .fc45.armada sorts just above the base
 # build, whatever release macro the spec uses.
 sed -i "s/^Release:.*/Release:        ${NM_REL}%{?dist}/" "$SPEC"
 sed -i "/^%autochangelog/d" "$SPEC"

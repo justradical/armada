@@ -51,7 +51,7 @@ pkgs=(
     /packages/kwin/kwin-libs-[0-9]*.rpm
 
     # PowerDevil's KWin backend treats 0 as safe; reserve 5% for internal panels.
-    /packages/powerdevil/powerdevil-*.fc44.armada.*.rpm
+    /packages/powerdevil/powerdevil-*.fc45.armada.*.rpm
 
     # scx_cosmos/scx_lavd for the Armada Control scheduler setting; without the
     # binaries armada-powerd reports the scheduler choice as unavailable.
@@ -64,10 +64,10 @@ pkgs=(
     /packages/umtp-responder/umtp-responder-*.rpm
 
     # Patched Turnip includes the Mesa #14656 VM_BIND fix.
-    /packages/mesa/mesa-*.fc44.armada.*.rpm
+    /packages/mesa/mesa-*.fc45.armada.*.rpm
 
     # Patched mangohud: Adreno GPU load/clock/temp for mainline drm/msm (msm_dpu).
-    /packages/mangohud/mangohud-*.fc44.armada.*.rpm
+    /packages/mangohud/mangohud-*.fc45.armada.*.rpm
 
     # Patched InputPlumber: dpad signed-axis fix
     /packages/inputplumber/inputplumber-*.rpm
